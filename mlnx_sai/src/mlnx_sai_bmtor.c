@@ -2,10 +2,6 @@
 #include <fx_base_api.h>
 #include <flextrum_types.h>
 
-service_method_table_t g_mlnx_services;
-static bool g_initialized = false;
-fx_handle_t fx_handle;
-
 sai_status_t sai_ext_oid_to_mlnx_offset(sai_object_id_t object_id, uint32_t *offset, sai_ext_object_type_t expected_type)
 {
     mlnx_sai_ext_object_id_t *mlnx_object_id = (mlnx_sai_ext_object_id_t *)&object_id;

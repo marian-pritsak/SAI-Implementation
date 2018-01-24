@@ -19,11 +19,14 @@
 
 #include "sai.h"
 #include "mlnx_sai.h"
+#include <fx_base_api.h>
+#include <flextrum_types.h>
 
 #include <sx/utils/dbg_utils.h>
 
 service_method_table_t g_mlnx_services;
 static bool            g_initialized = false;
+fx_handle_t fx_handle;
 
 /*
  * Routine Description:
@@ -62,6 +65,22 @@ sai_status_t sai_api_initialize(_In_ uint64_t flags, _In_ const service_method_t
     }
 
     g_initialized = true;
+    sx_port_log_id_t port_list[PORT_NUM];
+    uint32_t num_of_ports = PORT_NUM;
+    fx_init(&fx_handle);
+    fx_extern_init(fx_handle);
+    sx_status_t rc = fx_get_bindable_port_list(fx_handle, port_list, &num_of_ports);
+    if (rc)
+    {
+        printf("Error - rc:%d\n", rc);
+        return rc;
+    }
+    rc = fx_pipe_create(fx_handle, FX_IN_PORT, (void *)port_list, num_of_ports);
+    if (rc)
+    {
+        printf("Error - rc:%d\n", rc);
+        return rc;
+    }
 
     return SAI_STATUS_SUCCESS;
 }
@@ -226,7 +245,17 @@ sai_status_t sai_api_uninitialize(void)
 {
     memset(&g_mlnx_services, 0, sizeof(g_mlnx_services));
     g_initialized = false;
-
+    sx_port_log_id_t port_list[PORT_NUM];
+    uint32_t num_of_ports = PORT_NUM;
+    sx_status_t rc = fx_get_bindable_port_list(fx_handle, port_list, &num_of_ports);
+    if (rc)
+    {
+        printf("Error - rc:%d\n", rc);
+        return rc;
+    }
+    fx_pipe_destroy(fx_handle, FX_IN_PORT, (void *)port_list, num_of_ports);
+    fx_extern_deinit(fx_handle);
+    fx_deinit(fx_handle);
     return SAI_STATUS_SUCCESS;
 }
 
