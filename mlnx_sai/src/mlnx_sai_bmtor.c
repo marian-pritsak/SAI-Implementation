@@ -50,7 +50,7 @@ sai_status_t mlnx_create_table_peering_entry(
     sx_port_log_id_t sx_log_port_id;
     flextrum_action_id_t peer_action_id;
     sai_status_t sai_status;
-    int attr_idx;
+    uint32_t attr_idx;
     const sai_attribute_value_t *attr;
     if (SAI_STATUS_SUCCESS ==
         (sai_status =
@@ -124,7 +124,7 @@ sai_status_t mlnx_remove_table_peering_entry(
     uint32_t peer_offset;
     if (SAI_STATUS_SUCCESS != (status = sai_ext_oid_to_mlnx_offset(entry_id, &peer_offset, SAI_OBJECT_TYPE_TABLE_PEERING_ENTRY)))
     {
-        MLNX_SAI_LOG_ERR("Failure in extracting offest from peering entry object id 0x% " PRIx64 "\n", entry_id);
+        MLNX_SAI_LOG_ERR("Failure in extracting offest from peering entry object id 0x%" PRIx64 "\n", entry_id);
         return status;
     }
     if (fx_table_entry_remove(fx_handle, TABLE_PEERING_ID, peer_offset))
@@ -169,7 +169,7 @@ sai_status_t mlnx_create_table_vhost_entry(
     sx_tunnel_id_t tunnel_id;
     uint32_t tunnel_idx;
     sai_status_t sai_status;
-    int attr_idx;
+    uint32_t attr_idx;
     const sai_attribute_value_t *attr;
 
     if (SAI_STATUS_SUCCESS ==
@@ -284,9 +284,9 @@ sai_status_t mlnx_remove_table_vhost_entry(
     printf("mlnx_remove_table_vhost_entry\n");
     sai_status_t status;
     uint32_t vhost_offset;
-    if (SAI_STATUS_SUCCESS != (status = sai_ext_oid_to_mlnx_offset(entry_id, &vhost_offset, SAI_EXT_OBJECT_TYPE_VHOST_ENTRY)))
+    if (SAI_STATUS_SUCCESS != (status = sai_ext_oid_to_mlnx_offset(entry_id, &vhost_offset, SAI_OBJECT_TYPE_VHOST_ENTRY)))
     {
-        MLNX_SAI_LOG_ERR("Failure in extracting offest from vhost entry object id 0x% " PRIx64 "\n", entry_id);
+        MLNX_SAI_LOG_ERR("Failure in extracting offest from vhost entry object id 0x%" PRIx64 "\n", entry_id);
         return status;
     }
     if (fx_table_entry_remove(fx_handle, TABLE_VHOST_ID, vhost_offset))
