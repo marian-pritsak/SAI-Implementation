@@ -2,7 +2,21 @@
 #include <fx_base_api.h>
 #include <flextrum_types.h>
 
-sai_status_t sai_ext_oid_to_mlnx_offset(sai_object_id_t object_id, uint32_t *offset, sai_ext_object_type_t expected_type)
+fx_handle_t fx_handle;
+
+typedef struct _mlnx_sai_ext_object_id_t {
+    sai_object_type_t type;
+    uint32_t offset;
+} mlnx_sai_ext_object_id_t;
+
+void mlnx_to_sai_ext_object_id(sai_object_id_t *entry_id, uint32_t offset, sai_object_type_t type)
+{
+    mlnx_sai_ext_object_id_t mlnx_object_id = {.type = type, .offset = offset};
+    memcpy(entry_id, &mlnx_object_id, sizeof(mlnx_sai_ext_object_id_t));
+}
+
+
+sai_status_t sai_ext_oid_to_mlnx_offset(sai_object_id_t object_id, uint32_t *offset, sai_object_type_t expected_type)
 {
     mlnx_sai_ext_object_id_t *mlnx_object_id = (mlnx_sai_ext_object_id_t *)&object_id;
 
@@ -126,6 +140,7 @@ sai_status_t mlnx_set_table_peering_entry_attribute(
     _In_ const sai_attribute_t *attr)
 {
     printf("mlnx_set_table_peering_entry_attribute\n");
+    return SAI_STATUS_SUCCESS;
 }
 
 sai_status_t mlnx_get_table_peering_entry_attribute(
@@ -134,6 +149,7 @@ sai_status_t mlnx_get_table_peering_entry_attribute(
     _Inout_ sai_attribute_t *attr_list)
 {
     printf("mlnx_get_table_peering_entry_attribute\n");
+    return SAI_STATUS_SUCCESS;
 }
 
 sai_status_t mlnx_create_table_vhost_entry(
@@ -258,7 +274,7 @@ sai_status_t mlnx_create_table_vhost_entry(
         return SAI_STATUS_FAILURE;
     }
     printf("vhost entry added at offset %d\n", vhost_offset);
-    mlnx_to_sai_ext_object_id(entry_id, vhost_offset, SAI_EXT_OBJECT_TYPE_VHOST_ENTRY);
+    mlnx_to_sai_ext_object_id(entry_id, vhost_offset, SAI_OBJECT_TYPE_VHOST_ENTRY);
     return SAI_STATUS_SUCCESS;
 }
 
@@ -286,6 +302,7 @@ sai_status_t mlnx_set_table_vhost_entry_attribute(
     _In_ const sai_attribute_t *attr)
 {
     printf("mlnx_set_table_vhost_entry_attribute\n");
+    return SAI_STATUS_SUCCESS;
 }
 
 sai_status_t mlnx_get_table_vhost_entry_attribute(
@@ -294,6 +311,7 @@ sai_status_t mlnx_get_table_vhost_entry_attribute(
     _Inout_ sai_attribute_t *attr_list)
 {
     printf("mlnx_get_table_vhost_entry_attribute\n");
+    return SAI_STATUS_SUCCESS;
 }
 
 const sai_bmtor_api_t mlnx_bmtor_api = {
@@ -307,20 +325,7 @@ const sai_bmtor_api_t mlnx_bmtor_api = {
     mlnx_get_table_vhost_entry_attribute,
 };
 
-sai_status_t sai_ext_api_initialize()
-{
-#ifdef CONFIG_SYSLOG
-    if (!g_initialized)
-    {
-        openlog("SAI", 0, LOG_USER);
-    }
-#endif
-    if (g_initialized)
-    {
-        MLNX_SAI_LOG_ERR("SAI EXT API initialized already called before, can't re-initialize\n");
-        return SAI_STATUS_FAILURE;
-    }
-
+sai_status_t sai_ext_api_initialize() {    
     sx_port_log_id_t port_list[PORT_NUM];
     uint32_t num_of_ports = PORT_NUM;
     fx_init(&fx_handle);
@@ -337,13 +342,11 @@ sai_status_t sai_ext_api_initialize()
         printf("Error - rc:%d\n", rc);
         return rc;
     }
-    g_initialized = true;
     return SAI_STATUS_SUCCESS;
 }
 
 sai_status_t sai_ext_api_uninitialize()
 {
-    g_initialized = false;
     sx_port_log_id_t port_list[PORT_NUM];
     uint32_t num_of_ports = PORT_NUM;
     sx_status_t rc = fx_get_bindable_port_list(fx_handle, port_list, &num_of_ports);

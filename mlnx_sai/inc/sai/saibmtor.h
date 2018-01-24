@@ -9,6 +9,8 @@
 
 #include <saitypes.h>
 
+sai_status_t sai_ext_api_initialize();
+sai_status_t sai_ext_api_uninitialize();
     /**
  * @defgroup SAIBMTOR SAI - Extension specific API definitions
  *
