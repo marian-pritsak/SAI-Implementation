@@ -200,6 +200,10 @@ sai_status_t sai_api_query(_In_ sai_api_t sai_api_id, _Out_ void** api_method_ta
         *(const sai_tunnel_api_t**)api_method_table = &mlnx_tunnel_api;
         return SAI_STATUS_SUCCESS;
 
+    case SAI_API_BMTOR:
+        *(const sai_bmtor_api_t **)api_method_table = &mlnx_bmtor_api;
+        return SAI_STATUS_SUCCESS;
+
     default:
         MLNX_SAI_LOG_ERR("Invalid API type %d\n", sai_api_id);
         return SAI_STATUS_INVALID_PARAMETER;

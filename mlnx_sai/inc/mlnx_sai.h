@@ -180,6 +180,7 @@ extern const sai_samplepacket_api_t     mlnx_samplepacket_api;
 extern const sai_tunnel_api_t           mlnx_tunnel_api;
 extern const sai_stp_api_t              mlnx_stp_api;
 extern const sai_udf_api_t              mlnx_udf_api;
+extern const sai_bmtor_api_t            mlnx_bmtor_api;
 
 #define DEFAULT_ETH_SWID 0
 #define DEFAULT_VRID     0

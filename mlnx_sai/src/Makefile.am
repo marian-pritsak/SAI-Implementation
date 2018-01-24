@@ -75,6 +75,7 @@ libsai_la_SOURCES = \
                        mlnx_sai_utils.c \
                        mlnx_sai_vlan.c \
                        mlnx_sai_wred.c \
+                       mlnx_sai_bmtor.c \
 					   mlnx_sai_udf.c \
 					   meta/saimetadata.c \
 					   meta/saimetadatautils.c
@@ -128,6 +129,7 @@ libsai_apiinclude_HEADERS = \
         $(top_srcdir)/inc/sai/saivirtualrouter.h \
         $(top_srcdir)/inc/sai/saivlan.h \
         $(top_srcdir)/inc/sai/saiwred.h \
+        $(top_srcdir)/inc/sai/saibmtor.h \
         \
         $(top_srcdir)/inc/sai_windows.h \
         $(top_srcdir)/inc/mlnx_sai.h
