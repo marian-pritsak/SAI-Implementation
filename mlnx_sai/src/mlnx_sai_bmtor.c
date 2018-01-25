@@ -45,7 +45,6 @@ sai_status_t mlnx_create_table_peering_entry(
     void *peering_keys[1];
     void *peering_params[1];
     uint16_t peer_offset = 0;
-    uint16_t vhost_offset = 0;
     uint16_t vnet_bitmap = 0;
     sx_port_log_id_t sx_log_port_id;
     flextrum_action_id_t peer_action_id;
