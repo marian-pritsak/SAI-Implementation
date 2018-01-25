@@ -165,7 +165,6 @@ sai_status_t mlnx_create_table_vhost_entry(
     uint32_t underlay_dip;
     uint16_t vhost_offset;
     flextrum_action_id_t vhost_action_id;
-    tunnel_db_entry_t sai_tunnel_db_entry;
     sx_tunnel_id_t tunnel_id;
     uint32_t tunnel_idx;
     sai_status_t sai_status;
@@ -205,16 +204,27 @@ sai_status_t mlnx_create_table_vhost_entry(
 
     if (SAI_STATUS_SUCCESS ==
         (sai_status =
-             find_attrib_in_list(attr_count, attr_list, SAI_TABLE_VHOST_ENTRY_ATTR_META_REG, &attr, &attr_idx)))
+             find_attrib_in_list(attr_count, attr_list, SAI_TABLE_VHOST_ENTRY_ATTR_META_REG_KEY, &attr, &attr_idx)))
     {
-        vnet_bitmap = attr->aclfield.data.u16;
-        vnet_bitmap_mask = attr->aclfield.mask.u16;
+        vnet_bitmap = attr->u16;
     }
     else
     {
-        MLNX_SAI_LOG_ERR("Didn't recieve mandatory vnet bitmap attribute\n");
+        MLNX_SAI_LOG_ERR("Didn't recieve mandatory vnet bitmap key attribute\n");
         return SAI_STATUS_INVALID_PARAMETER;
     }
+    
+    if (SAI_STATUS_SUCCESS ==
+        (sai_status =
+             find_attrib_in_list(attr_count, attr_list, SAI_TABLE_VHOST_ENTRY_ATTR_META_REG_MASK, &attr, &attr_idx)))
+    {
+        vnet_bitmap_mask = attr->u16;
+    }
+    else
+    {
+        MLNX_SAI_LOG_ERR("Didn't recieve mandatory vnet bitmap mask attribute\n");
+        return SAI_STATUS_INVALID_PARAMETER;
+    }   
 
     if (SAI_STATUS_SUCCESS ==
         (sai_status =
@@ -227,7 +237,7 @@ sai_status_t mlnx_create_table_vhost_entry(
             return SAI_STATUS_INVALID_ATTR_VALUE_0 + attr_idx;
         }
         tunnel_id = g_sai_db_ptr->tunnel_db[tunnel_idx].sx_tunnel_id;
-        printf("tunnel sai oid 0x%" PRIx64 ". tunnel mlnx oid 0x%" PRIx64 "\n", attr->oid, tunnel_id);
+        printf("tunnel sai oid 0x%" PRIx64 ". tunnel mlnx oid 0x%x\n", attr->oid, (uint32_t) tunnel_id);
     }
     else
     {
@@ -274,7 +284,7 @@ sai_status_t mlnx_create_table_vhost_entry(
         return SAI_STATUS_FAILURE;
     }
     printf("vhost entry added at offset %d\n", vhost_offset);
-    mlnx_to_sai_ext_object_id(entry_id, vhost_offset, SAI_OBJECT_TYPE_VHOST_ENTRY);
+    mlnx_to_sai_ext_object_id(entry_id, vhost_offset, SAI_OBJECT_TYPE_TABLE_VHOST_ENTRY);
     return SAI_STATUS_SUCCESS;
 }
 
@@ -284,7 +294,7 @@ sai_status_t mlnx_remove_table_vhost_entry(
     printf("mlnx_remove_table_vhost_entry\n");
     sai_status_t status;
     uint32_t vhost_offset;
-    if (SAI_STATUS_SUCCESS != (status = sai_ext_oid_to_mlnx_offset(entry_id, &vhost_offset, SAI_OBJECT_TYPE_VHOST_ENTRY)))
+    if (SAI_STATUS_SUCCESS != (status = sai_ext_oid_to_mlnx_offset(entry_id, &vhost_offset, SAI_OBJECT_TYPE_TABLE_VHOST_ENTRY)))
     {
         MLNX_SAI_LOG_ERR("Failure in extracting offest from vhost entry object id 0x%" PRIx64 "\n", entry_id);
         return status;
