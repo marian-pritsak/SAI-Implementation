@@ -87,7 +87,7 @@ SAI_LIBXML2_ADD = -lxml2
 endif
 
 libsai_la_LIBADD = \
-                   -L$(APP_LIB_PATH)/lib -lsxapi -lsw_rm\
+                   -L$(APP_LIB_PATH)/lib -lsxapi -lfx_base -lsw_rm\
 		   ${SAI_LIBXML2_ADD}
 
 libsai_apiincludedir = $(includedir)/sai
