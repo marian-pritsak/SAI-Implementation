@@ -9,8 +9,6 @@
 
 #include <saitypes.h>
 
-sai_status_t sai_ext_api_initialize();
-sai_status_t sai_ext_api_uninitialize();
     /**
  * @defgroup SAIBMTOR SAI - Extension specific API definitions
  *
@@ -276,6 +274,21 @@ typedef sai_status_t(*sai_get_table_vhost_entry_attribute_fn)(
         _In_ uint32_t attr_count,
         _Inout_ sai_attribute_t *attr_list);
 
+
+/**
+ * @brief Init bmtor api and create pipelines
+ *
+ * @return #SAI_STATUS_SUCCESS on success Failure status code on error
+ */
+typedef sai_status_t(*sai_bmtor_api_initialize_fn)();
+
+/**
+ * @brief Uninitalize bmtor api and destory pipelines
+ *
+ * @return #SAI_STATUS_SUCCESS on success Failure status code on error
+ */
+typedef sai_status_t(*sai_bmtor_api_uninitialize_fn)();
+
 typedef struct _sai_bmtor_api_t
 {
     sai_create_table_peering_entry_fn            create_table_peering_entry;
@@ -286,6 +299,8 @@ typedef struct _sai_bmtor_api_t
     sai_remove_table_vhost_entry_fn            remove_table_vhost_entry;
     sai_set_table_vhost_entry_attribute_fn    set_table_vhost_entry_attribute;
     sai_get_table_vhost_entry_attribute_fn    get_table_vhost_entry_attribute;
+    sai_bmtor_api_initialize_fn   bmtor_api_initialize;
+    sai_bmtor_api_uninitialize_fn   bmtor_api_uninitialize;
 } sai_bmtor_api_t;
 /**
  * @}

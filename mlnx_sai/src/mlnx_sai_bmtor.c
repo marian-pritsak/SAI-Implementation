@@ -323,18 +323,7 @@ sai_status_t mlnx_get_table_vhost_entry_attribute(
     return SAI_STATUS_SUCCESS;
 }
 
-const sai_bmtor_api_t mlnx_bmtor_api = {
-    mlnx_create_table_peering_entry,
-    mlnx_remove_table_peering_entry,
-    mlnx_set_table_peering_entry_attribute,
-    mlnx_get_table_peering_entry_attribute,
-    mlnx_create_table_vhost_entry,
-    mlnx_remove_table_vhost_entry,
-    mlnx_set_table_vhost_entry_attribute,
-    mlnx_get_table_vhost_entry_attribute,
-};
-
-sai_status_t sai_ext_api_initialize() {    
+sai_status_t mlnx_bmtor_api_initialize() {    
     sx_port_log_id_t port_list[PORT_NUM];
     uint32_t num_of_ports = PORT_NUM;
     fx_init(&fx_handle);
@@ -354,7 +343,7 @@ sai_status_t sai_ext_api_initialize() {
     return SAI_STATUS_SUCCESS;
 }
 
-sai_status_t sai_ext_api_uninitialize()
+sai_status_t mlnx_bmtor_api_uninitialize()
 {
     sx_port_log_id_t port_list[PORT_NUM];
     uint32_t num_of_ports = PORT_NUM;
@@ -369,3 +358,16 @@ sai_status_t sai_ext_api_uninitialize()
     fx_deinit(fx_handle);
     return SAI_STATUS_SUCCESS;
 }
+
+const sai_bmtor_api_t mlnx_bmtor_api = {
+    mlnx_create_table_peering_entry,
+    mlnx_remove_table_peering_entry,
+    mlnx_set_table_peering_entry_attribute,
+    mlnx_get_table_peering_entry_attribute,
+    mlnx_create_table_vhost_entry,
+    mlnx_remove_table_vhost_entry,
+    mlnx_set_table_vhost_entry_attribute,
+    mlnx_get_table_vhost_entry_attribute,
+    mlnx_bmtor_api_initialize,
+    mlnx_bmtor_api_uninitialize,
+};

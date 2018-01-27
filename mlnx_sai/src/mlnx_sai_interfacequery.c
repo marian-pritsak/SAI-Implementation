@@ -63,7 +63,6 @@ sai_status_t sai_api_initialize(_In_ uint64_t flags, _In_ const service_method_t
     }
 
     g_initialized = true;
-    sai_ext_api_initialize();
     return SAI_STATUS_SUCCESS;
 }
 
@@ -227,7 +226,6 @@ sai_status_t sai_api_uninitialize(void)
 {
     memset(&g_mlnx_services, 0, sizeof(g_mlnx_services));
     g_initialized = false;
-    sai_ext_api_uninitialize();
     return SAI_STATUS_SUCCESS;
 }
 
