@@ -252,6 +252,20 @@ sai_status_t sai_dbg_generate_dump(
         _In_ const char *dump_file_name);
 
 /**
+ * @brief Create extension pipelines
+ *
+ * @return #SAI_STATUS_SUCCESS on success Failure status code on error
+ */
+sai_status_t sai_extension_api_initialize();
+
+/**
+ * @brief Destroy extension pipelines
+ *
+ * @return #SAI_STATUS_SUCCESS on success Failure status code on error
+ */
+sai_status_t sai_extension_api_uninitialize();
+
+/**
  * @}
  */
 #endif /** __SAI_H_ */
