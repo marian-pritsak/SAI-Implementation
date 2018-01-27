@@ -18,12 +18,12 @@
     /**
  * @brief Attribute data for #SAI_TABLE_PEERING_ENTRY_ATTR_ACTION
  */
-    typedef enum _sai_table_peering_entry_action_t {
-            SAI_TABLE_PEERING_ENTRY_ACTION_SET_VNET_BITMAP,
+typedef enum _sai_table_peering_entry_action_t {
+    SAI_TABLE_PEERING_ENTRY_ACTION_SET_VNET_BITMAP,
 
-            SAI_TABLE_PEERING_ENTRY_ACTION_NOACTION,
+    SAI_TABLE_PEERING_ENTRY_ACTION_NOACTION,
 
-    } sai_table_peering_entry_action_t;
+} sai_table_peering_entry_action_t;
 
 /**
  * @brief Attribute data for #SAI_TABLE_VHOST_ENTRY_ATTR_ACTION
@@ -274,16 +274,15 @@ typedef sai_status_t(*sai_get_table_vhost_entry_attribute_fn)(
         _In_ uint32_t attr_count,
         _Inout_ sai_attribute_t *attr_list);
 
-
 /**
- * @brief Init bmtor api and create pipelines
+ * @brief Create extension pipelines
  *
  * @return #SAI_STATUS_SUCCESS on success Failure status code on error
  */
 typedef sai_status_t(*sai_bmtor_api_initialize_fn)();
 
 /**
- * @brief Uninitalize bmtor api and destory pipelines
+ * @brief Destroy extension pipelines
  *
  * @return #SAI_STATUS_SUCCESS on success Failure status code on error
  */
