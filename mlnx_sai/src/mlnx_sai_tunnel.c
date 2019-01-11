@@ -6521,7 +6521,7 @@ sai_status_t mlnx_tunnel_log_set(sx_verbosity_level_t level)
  */
 static sai_status_t mlnx_get_tunnel_stats(_In_ sai_object_id_t          tunnel_id,
                                           _In_ uint32_t                 number_of_counters,
-                                          _In_ const sai_tunnel_stat_t *counter_ids,
+                                          _In_ const sai_stat_id_t     *counter_ids,
                                           _Out_ uint64_t               *counters)
 {
     return SAI_STATUS_NOT_IMPLEMENTED;
@@ -6540,7 +6540,7 @@ static sai_status_t mlnx_get_tunnel_stats(_In_ sai_object_id_t          tunnel_i
  */
 sai_status_t mlnx_get_tunnel_stats_ext(_In_ sai_object_id_t          tunnel_id,
                                        _In_ uint32_t                 number_of_counters,
-                                       _In_ const sai_tunnel_stat_t *counter_ids,
+                                       _In_ const sai_stat_id_t     *counter_ids,
                                        _In_ sai_stats_mode_t         mode,
                                        _Out_ uint64_t               *counters)
 {
@@ -6558,7 +6558,7 @@ sai_status_t mlnx_get_tunnel_stats_ext(_In_ sai_object_id_t          tunnel_id,
  */
 static sai_status_t mlnx_clear_tunnel_stats(_In_ sai_object_id_t          tunnel_id,
                                             _In_ uint32_t                 number_of_counters,
-                                            _In_ const sai_tunnel_stat_t *counter_ids)
+                                            _In_ const sai_stat_id_t     *counter_ids)
 {
     return SAI_STATUS_NOT_IMPLEMENTED;
 }

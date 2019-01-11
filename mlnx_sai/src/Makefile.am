@@ -1,7 +1,7 @@
 # Makefile.am -- Process this file with automake to produce Makefile.in
 
 INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/include -I$(srcdir) \
-           -I$(srcdir)/../inc -I$(srcdir)/../inc/sai \
+           -I$(srcdir)/../inc -I$(srcdir)/../inc/sai -I$(srcdir)/../inc/experimental \
            -I$(APP_LIB_PATH)/include \
            -I$(XML2_LIB_PATH)/include/libxml2 \
 		   -I$(srcdir)/meta
@@ -108,6 +108,7 @@ libsai_apiinclude_HEADERS = \
         $(top_srcdir)/inc/sai/saihostif.h \
         $(top_srcdir)/inc/sai/saiipmc.h \
         $(top_srcdir)/inc/sai/saiipmcgroup.h \
+        $(top_srcdir)/inc/sai/saiisolationgroup.h \
         $(top_srcdir)/inc/sai/sail2mc.h \
         $(top_srcdir)/inc/sai/sail2mcgroup.h \
         $(top_srcdir)/inc/sai/sailag.h \
@@ -140,6 +141,10 @@ libsai_apiinclude_HEADERS = \
         $(top_srcdir)/inc/sai/saivirtualrouter.h \
         $(top_srcdir)/inc/sai/saivlan.h \
         $(top_srcdir)/inc/sai/saiwred.h \
+        $(top_srcdir)/inc/experimental/saiextensions.h \
+        $(top_srcdir)/inc/experimental/saiswitchextensions.h \
+        $(top_srcdir)/inc/experimental/saitypesextensions.h \
+        $(top_srcdir)/inc/experimental/saiexperimentalbmtor.h \
         \
         $(top_srcdir)/inc/sai_windows.h \
         $(top_srcdir)/inc/mlnx_sai.h

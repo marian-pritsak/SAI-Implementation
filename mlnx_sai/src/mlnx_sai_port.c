@@ -3939,7 +3939,7 @@ static sai_status_t mlnx_get_port_attribute(_In_ sai_object_id_t     port_id,
  */
 sai_status_t mlnx_get_port_stats_ext(_In_ sai_object_id_t        port_id,
                                      _In_ uint32_t               number_of_counters,
-                                     _In_ const sai_port_stat_t *counter_ids,
+                                     _In_ const sai_stat_id_t   *counter_ids,
                                      _In_ sai_stats_mode_t       mode,
                                      _Out_ uint64_t             *counters)
 {
@@ -4622,7 +4622,7 @@ sai_status_t mlnx_get_port_stats_ext(_In_ sai_object_id_t        port_id,
  */
 static sai_status_t mlnx_get_port_stats(_In_ sai_object_id_t        port_id,
                                         _In_ uint32_t               number_of_counters,
-                                        _In_ const sai_port_stat_t *counter_ids,
+                                        _In_ const sai_stat_id_t   *counter_ids,
                                         _Out_ uint64_t             *counters)
 {
     return mlnx_get_port_stats_ext(port_id, number_of_counters, counter_ids, SAI_STATS_MODE_READ, counters);
@@ -4643,7 +4643,7 @@ static sai_status_t mlnx_get_port_stats(_In_ sai_object_id_t        port_id,
  */
 static sai_status_t mlnx_clear_port_stats(_In_ sai_object_id_t        port_id,
                                           _In_ uint32_t               number_of_counters,
-                                          _In_ const sai_port_stat_t *counter_ids)
+                                          _In_ const sai_stat_id_t   *counter_ids)
 {
     return SAI_STATUS_NOT_IMPLEMENTED;
 }
@@ -7390,7 +7390,7 @@ static sai_status_t mlnx_port_pool_attr_get(_In_ const sai_object_key_t   *key,
  */
 sai_status_t mlnx_get_port_pool_stats_ext(_In_ sai_object_id_t             port_pool_id,
                                           _In_ uint32_t                    number_of_counters,
-                                          _In_ const sai_port_pool_stat_t *counter_ids,
+                                          _In_ const sai_stat_id_t        *counter_ids,
                                           _In_ sai_stats_mode_t            mode,
                                           _Out_ uint64_t                  *counters)
 {
@@ -7550,7 +7550,7 @@ sai_status_t mlnx_get_port_pool_stats_ext(_In_ sai_object_id_t             port_
  */
 static sai_status_t mlnx_get_port_pool_stats(_In_ sai_object_id_t             port_pool_id,
                                              _In_ uint32_t                    number_of_counters,
-                                             _In_ const sai_port_pool_stat_t *counter_ids,
+                                             _In_ const sai_stat_id_t        *counter_ids,
                                              _Out_ uint64_t                  *counters)
 {
     return mlnx_get_port_pool_stats_ext(port_pool_id, number_of_counters, counter_ids, SAI_STATS_MODE_READ, counters);
@@ -7567,7 +7567,7 @@ static sai_status_t mlnx_get_port_pool_stats(_In_ sai_object_id_t             po
  */
 static sai_status_t mlnx_clear_port_pool_stats(_In_ sai_object_id_t             port_pool_id,
                                                _In_ uint32_t                    number_of_counters,
-                                               _In_ const sai_port_pool_stat_t *counter_ids)
+                                               _In_ const sai_stat_id_t        *counter_ids)
 {
     sai_status_t                     status;
     uint8_t                          ext_data[EXTENDED_DATA_SIZE] = { 0 };

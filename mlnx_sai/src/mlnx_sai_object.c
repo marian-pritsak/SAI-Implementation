@@ -64,7 +64,7 @@ sai_status_t sai_get_object_count(_In_ sai_object_id_t   switch_id,
  */
 sai_status_t sai_get_object_key(_In_ sai_object_id_t      switch_id,
                                 _In_ sai_object_type_t    object_type,
-                                _In_ uint32_t             object_count,
+                                _In_ uint32_t            *object_count,
                                 _Inout_ sai_object_key_t *object_list)
 {
     return SAI_STATUS_NOT_IMPLEMENTED;
