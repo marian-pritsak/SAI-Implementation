@@ -91,6 +91,7 @@ sai_status_t sai_api_query(_In_ sai_api_t sai_api_id, _Out_ void** api_method_ta
         return SAI_STATUS_INVALID_PARAMETER;
     }
 
+    MLNX_SAI_LOG_ERR("marianp SAI_API %d BMTOR API %d\n", sai_api_id, SAI_API_BMTOR);
     switch (sai_api_id) {
     case SAI_API_BRIDGE:
         *(const sai_bridge_api_t**)api_method_table = &mlnx_bridge_api;
@@ -202,6 +203,10 @@ sai_status_t sai_api_query(_In_ sai_api_t sai_api_id, _Out_ void** api_method_ta
 
     case SAI_API_L2MC_GROUP:
         *(const sai_l2mc_group_api_t**)api_method_table = &mlnx_l2mc_group_api;
+        return SAI_STATUS_SUCCESS;
+
+    case SAI_API_BMTOR:
+        *(const sai_bmtor_api_t**)api_method_table = &mlnx_bmtor_api;
         return SAI_STATUS_SUCCESS;
 
     default:

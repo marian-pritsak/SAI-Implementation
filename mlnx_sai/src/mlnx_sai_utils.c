@@ -2154,7 +2154,9 @@ sai_status_t check_attribs_metadata(_In_ uint32_t                            att
             goto out;
         }
 
-        status = sai_vendor_attr_index_find(attr_list[ii].id, functionality_vendor_attr, &vendor_attr_index);
+        if (attr_list[ii].id != SAI_ROUTER_INTERFACE_ATTR_BRIDGE_ID) {
+            status = sai_vendor_attr_index_find(attr_list[ii].id, functionality_vendor_attr, &vendor_attr_index);
+        }
         if (SAI_ERR(status)) {
             SX_LOG_ERR("Not implemented attribute %s (vendor data not found)\n", meta_data->attridname);
             status = SAI_STATUS_ATTR_NOT_IMPLEMENTED_0 + ii;

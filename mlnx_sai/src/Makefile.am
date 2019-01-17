@@ -51,6 +51,7 @@ libsai_la_SOURCES = \
                        dbgdump/mlnx_sai_dbg_bridge.c \
                        dbgdump/mlnx_sai_dbg_udf.c \
                        mlnx_sai_acl.c \
+                       mlnx_sai_bmtor.c \
                        mlnx_sai_bridge.c \
                        mlnx_sai_buffer.c \
                        mlnx_sai_fdb.c \
@@ -93,7 +94,7 @@ endif
 
 libsai_la_LIBADD = \
                    -L$(APP_LIB_PATH)/lib -lsxapi -lsw_rm\
-		   ${SAI_LIBXML2_ADD}
+		   ${SAI_LIBXML2_ADD} -lfx_base
 
 libsai_apiincludedir = $(includedir)/sai
 libsai_apiinclude_HEADERS = \

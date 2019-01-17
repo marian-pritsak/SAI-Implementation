@@ -206,10 +206,10 @@ void custom_range_test(void)
     TEST_ASSERT_TRUE(SAI_ISOLATION_GROUP_ATTR_CUSTOM_RANGE_END > 0x10000000, "invalid custom range end for ISOLATION_GROUP");
     TEST_ASSERT_TRUE(SAI_ISOLATION_GROUP_MEMBER_ATTR_CUSTOM_RANGE_START == 0x10000000, "invalid custom range start for ISOLATION_GROUP_MEMBER");
     TEST_ASSERT_TRUE(SAI_ISOLATION_GROUP_MEMBER_ATTR_CUSTOM_RANGE_END > 0x10000000, "invalid custom range end for ISOLATION_GROUP_MEMBER");
-    TEST_ASSERT_TRUE(SAI_TABLE_VNET_ENTRY_ATTR_CUSTOM_RANGE_START == 0x10000000, "invalid custom range start for TABLE_VNET_ENTRY");
-    TEST_ASSERT_TRUE(SAI_TABLE_VNET_ENTRY_ATTR_CUSTOM_RANGE_END > 0x10000000, "invalid custom range end for TABLE_VNET_ENTRY");
-    TEST_ASSERT_TRUE(SAI_TABLE_TUNNEL_ROUTE_ENTRY_ATTR_CUSTOM_RANGE_START == 0x10000000, "invalid custom range start for TABLE_TUNNEL_ROUTE_ENTRY");
-    TEST_ASSERT_TRUE(SAI_TABLE_TUNNEL_ROUTE_ENTRY_ATTR_CUSTOM_RANGE_END > 0x10000000, "invalid custom range end for TABLE_TUNNEL_ROUTE_ENTRY");
+    TEST_ASSERT_TRUE(SAI_TABLE_BITMAP_CLASSIFICATION_ENTRY_ATTR_CUSTOM_RANGE_START == 0x10000000, "invalid custom range start for TABLE_BITMAP_CLASSIFICATION_ENTRY");
+    TEST_ASSERT_TRUE(SAI_TABLE_BITMAP_CLASSIFICATION_ENTRY_ATTR_CUSTOM_RANGE_END > 0x10000000, "invalid custom range end for TABLE_BITMAP_CLASSIFICATION_ENTRY");
+    TEST_ASSERT_TRUE(SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_CUSTOM_RANGE_START == 0x10000000, "invalid custom range start for TABLE_BITMAP_ROUTER_ENTRY");
+    TEST_ASSERT_TRUE(SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_CUSTOM_RANGE_END > 0x10000000, "invalid custom range end for TABLE_BITMAP_ROUTER_ENTRY");
 }
 void check_pointer_names_test(void)
 {
@@ -397,12 +397,12 @@ void enum_size_check_test(void)
     TEST_ASSERT_TRUE((sizeof(sai_switch_oper_status_t) == sizeof(int32_t)), "invalid enum sai_switch_oper_status_t size");
     TEST_ASSERT_TRUE((sizeof(sai_switch_restart_type_t) == sizeof(int32_t)), "invalid enum sai_switch_restart_type_t size");
     TEST_ASSERT_TRUE((sizeof(sai_switch_switching_mode_t) == sizeof(int32_t)), "invalid enum sai_switch_switching_mode_t size");
-    TEST_ASSERT_TRUE((sizeof(sai_table_tunnel_route_entry_action_t) == sizeof(int32_t)), "invalid enum sai_table_tunnel_route_entry_action_t size");
-    TEST_ASSERT_TRUE((sizeof(sai_table_tunnel_route_entry_attr_t) == sizeof(int32_t)), "invalid enum sai_table_tunnel_route_entry_attr_t size");
-    TEST_ASSERT_TRUE((sizeof(sai_table_tunnel_route_entry_stat_t) == sizeof(int32_t)), "invalid enum sai_table_tunnel_route_entry_stat_t size");
-    TEST_ASSERT_TRUE((sizeof(sai_table_vnet_entry_action_t) == sizeof(int32_t)), "invalid enum sai_table_vnet_entry_action_t size");
-    TEST_ASSERT_TRUE((sizeof(sai_table_vnet_entry_attr_t) == sizeof(int32_t)), "invalid enum sai_table_vnet_entry_attr_t size");
-    TEST_ASSERT_TRUE((sizeof(sai_table_vnet_entry_stat_t) == sizeof(int32_t)), "invalid enum sai_table_vnet_entry_stat_t size");
+    TEST_ASSERT_TRUE((sizeof(sai_table_bitmap_classification_entry_action_t) == sizeof(int32_t)), "invalid enum sai_table_bitmap_classification_entry_action_t size");
+    TEST_ASSERT_TRUE((sizeof(sai_table_bitmap_classification_entry_attr_t) == sizeof(int32_t)), "invalid enum sai_table_bitmap_classification_entry_attr_t size");
+    TEST_ASSERT_TRUE((sizeof(sai_table_bitmap_classification_entry_stat_t) == sizeof(int32_t)), "invalid enum sai_table_bitmap_classification_entry_stat_t size");
+    TEST_ASSERT_TRUE((sizeof(sai_table_bitmap_router_entry_action_t) == sizeof(int32_t)), "invalid enum sai_table_bitmap_router_entry_action_t size");
+    TEST_ASSERT_TRUE((sizeof(sai_table_bitmap_router_entry_attr_t) == sizeof(int32_t)), "invalid enum sai_table_bitmap_router_entry_attr_t size");
+    TEST_ASSERT_TRUE((sizeof(sai_table_bitmap_router_entry_stat_t) == sizeof(int32_t)), "invalid enum sai_table_bitmap_router_entry_stat_t size");
     TEST_ASSERT_TRUE((sizeof(sai_tam_attr_t) == sizeof(int32_t)), "invalid enum sai_tam_attr_t size");
     TEST_ASSERT_TRUE((sizeof(sai_tam_histogram_attr_t) == sizeof(int32_t)), "invalid enum sai_tam_histogram_attr_t size");
     TEST_ASSERT_TRUE((sizeof(sai_tam_microburst_attr_t) == sizeof(int32_t)), "invalid enum sai_tam_microburst_attr_t size");
@@ -2121,14 +2121,14 @@ void api_name_test(void)
     }
     {
         sai_bmtor_api_t bmtor_api;
-        sai_generic_create_fn create = bmtor_api.create_table_vnet_entry;
-        sai_generic_remove_fn remove = bmtor_api.remove_table_vnet_entry;
-        sai_generic_set_fn set = bmtor_api.set_table_vnet_entry_attribute;
-        sai_generic_get_fn get = bmtor_api.get_table_vnet_entry_attribute;
-        sai_create_table_vnet_entry_fn cr = NULL;
-        sai_remove_table_vnet_entry_fn re = NULL;
-        sai_set_table_vnet_entry_attribute_fn se = NULL;
-        sai_get_table_vnet_entry_attribute_fn ge = NULL;
+        sai_generic_create_fn create = bmtor_api.create_table_bitmap_classification_entry;
+        sai_generic_remove_fn remove = bmtor_api.remove_table_bitmap_classification_entry;
+        sai_generic_set_fn set = bmtor_api.set_table_bitmap_classification_entry_attribute;
+        sai_generic_get_fn get = bmtor_api.get_table_bitmap_classification_entry_attribute;
+        sai_create_table_bitmap_classification_entry_fn cr = NULL;
+        sai_remove_table_bitmap_classification_entry_fn re = NULL;
+        sai_set_table_bitmap_classification_entry_attribute_fn se = NULL;
+        sai_get_table_bitmap_classification_entry_attribute_fn ge = NULL;
         dummy = &create;
         dummy = &remove;
         dummy = &set;
@@ -2137,18 +2137,18 @@ void api_name_test(void)
         dummy = &re;
         dummy = &se;
         dummy = &ge;
-        checked[(int)SAI_OBJECT_TYPE_TABLE_VNET_ENTRY] = SAI_OBJECT_TYPE_TABLE_VNET_ENTRY;
+        checked[(int)SAI_OBJECT_TYPE_TABLE_BITMAP_CLASSIFICATION_ENTRY] = SAI_OBJECT_TYPE_TABLE_BITMAP_CLASSIFICATION_ENTRY;
     }
     {
         sai_bmtor_api_t bmtor_api;
-        sai_generic_create_fn create = bmtor_api.create_table_tunnel_route_entry;
-        sai_generic_remove_fn remove = bmtor_api.remove_table_tunnel_route_entry;
-        sai_generic_set_fn set = bmtor_api.set_table_tunnel_route_entry_attribute;
-        sai_generic_get_fn get = bmtor_api.get_table_tunnel_route_entry_attribute;
-        sai_create_table_tunnel_route_entry_fn cr = NULL;
-        sai_remove_table_tunnel_route_entry_fn re = NULL;
-        sai_set_table_tunnel_route_entry_attribute_fn se = NULL;
-        sai_get_table_tunnel_route_entry_attribute_fn ge = NULL;
+        sai_generic_create_fn create = bmtor_api.create_table_bitmap_router_entry;
+        sai_generic_remove_fn remove = bmtor_api.remove_table_bitmap_router_entry;
+        sai_generic_set_fn set = bmtor_api.set_table_bitmap_router_entry_attribute;
+        sai_generic_get_fn get = bmtor_api.get_table_bitmap_router_entry_attribute;
+        sai_create_table_bitmap_router_entry_fn cr = NULL;
+        sai_remove_table_bitmap_router_entry_fn re = NULL;
+        sai_set_table_bitmap_router_entry_attribute_fn se = NULL;
+        sai_get_table_bitmap_router_entry_attribute_fn ge = NULL;
         dummy = &create;
         dummy = &remove;
         dummy = &set;
@@ -2157,7 +2157,7 @@ void api_name_test(void)
         dummy = &re;
         dummy = &se;
         dummy = &ge;
-        checked[(int)SAI_OBJECT_TYPE_TABLE_TUNNEL_ROUTE_ENTRY] = SAI_OBJECT_TYPE_TABLE_TUNNEL_ROUTE_ENTRY;
+        checked[(int)SAI_OBJECT_TYPE_TABLE_BITMAP_ROUTER_ENTRY] = SAI_OBJECT_TYPE_TABLE_BITMAP_ROUTER_ENTRY;
     }
     int index = SAI_OBJECT_TYPE_NULL;
     for (; index < SAI_OBJECT_TYPE_MAX; ++index)
@@ -2797,8 +2797,8 @@ void statenum_defined(void)
     TEST_ASSERT_TRUE(sai_metadata_object_type_info_SAI_OBJECT_TYPE_PORT.statenum != NULL, "statenum field for object SAI_OBJECT_TYPE_PORT must be populated");
     TEST_ASSERT_TRUE(sai_metadata_object_type_info_SAI_OBJECT_TYPE_QUEUE.statenum != NULL, "statenum field for object SAI_OBJECT_TYPE_QUEUE must be populated");
     TEST_ASSERT_TRUE(sai_metadata_object_type_info_SAI_OBJECT_TYPE_ROUTER_INTERFACE.statenum != NULL, "statenum field for object SAI_OBJECT_TYPE_ROUTER_INTERFACE must be populated");
-    TEST_ASSERT_TRUE(sai_metadata_object_type_info_SAI_OBJECT_TYPE_TABLE_TUNNEL_ROUTE_ENTRY.statenum != NULL, "statenum field for object SAI_OBJECT_TYPE_TABLE_TUNNEL_ROUTE_ENTRY must be populated");
-    TEST_ASSERT_TRUE(sai_metadata_object_type_info_SAI_OBJECT_TYPE_TABLE_VNET_ENTRY.statenum != NULL, "statenum field for object SAI_OBJECT_TYPE_TABLE_VNET_ENTRY must be populated");
+    TEST_ASSERT_TRUE(sai_metadata_object_type_info_SAI_OBJECT_TYPE_TABLE_BITMAP_CLASSIFICATION_ENTRY.statenum != NULL, "statenum field for object SAI_OBJECT_TYPE_TABLE_BITMAP_CLASSIFICATION_ENTRY must be populated");
+    TEST_ASSERT_TRUE(sai_metadata_object_type_info_SAI_OBJECT_TYPE_TABLE_BITMAP_ROUTER_ENTRY.statenum != NULL, "statenum field for object SAI_OBJECT_TYPE_TABLE_BITMAP_ROUTER_ENTRY must be populated");
     TEST_ASSERT_TRUE(sai_metadata_object_type_info_SAI_OBJECT_TYPE_TAM_MICROBURST.statenum != NULL, "statenum field for object SAI_OBJECT_TYPE_TAM_MICROBURST must be populated");
     TEST_ASSERT_TRUE(sai_metadata_object_type_info_SAI_OBJECT_TYPE_TUNNEL.statenum != NULL, "statenum field for object SAI_OBJECT_TYPE_TUNNEL must be populated");
     TEST_ASSERT_TRUE(sai_metadata_object_type_info_SAI_OBJECT_TYPE_VLAN.statenum != NULL, "statenum field for object SAI_OBJECT_TYPE_VLAN must be populated");

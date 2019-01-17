@@ -242,12 +242,12 @@ extern const sai_enum_metadata_t sai_metadata_enum_sai_switch_mcast_snooping_cap
 extern const sai_enum_metadata_t sai_metadata_enum_sai_switch_oper_status_t;
 extern const sai_enum_metadata_t sai_metadata_enum_sai_switch_restart_type_t;
 extern const sai_enum_metadata_t sai_metadata_enum_sai_switch_switching_mode_t;
-extern const sai_enum_metadata_t sai_metadata_enum_sai_table_tunnel_route_entry_action_t;
-extern const sai_enum_metadata_t sai_metadata_enum_sai_table_tunnel_route_entry_attr_t;
-extern const sai_enum_metadata_t sai_metadata_enum_sai_table_tunnel_route_entry_stat_t;
-extern const sai_enum_metadata_t sai_metadata_enum_sai_table_vnet_entry_action_t;
-extern const sai_enum_metadata_t sai_metadata_enum_sai_table_vnet_entry_attr_t;
-extern const sai_enum_metadata_t sai_metadata_enum_sai_table_vnet_entry_stat_t;
+extern const sai_enum_metadata_t sai_metadata_enum_sai_table_bitmap_classification_entry_action_t;
+extern const sai_enum_metadata_t sai_metadata_enum_sai_table_bitmap_classification_entry_attr_t;
+extern const sai_enum_metadata_t sai_metadata_enum_sai_table_bitmap_classification_entry_stat_t;
+extern const sai_enum_metadata_t sai_metadata_enum_sai_table_bitmap_router_entry_action_t;
+extern const sai_enum_metadata_t sai_metadata_enum_sai_table_bitmap_router_entry_attr_t;
+extern const sai_enum_metadata_t sai_metadata_enum_sai_table_bitmap_router_entry_stat_t;
 extern const sai_enum_metadata_t sai_metadata_enum_sai_tam_attr_t;
 extern const sai_enum_metadata_t sai_metadata_enum_sai_tam_histogram_attr_t;
 extern const sai_enum_metadata_t sai_metadata_enum_sai_tam_microburst_attr_t;
@@ -586,17 +586,17 @@ extern const char* sai_metadata_get_switch_restart_type_name(
 extern const char* sai_metadata_get_switch_switching_mode_name(
     _In_ sai_switch_switching_mode_t value);
 
-extern const char* sai_metadata_get_table_tunnel_route_entry_action_name(
-    _In_ sai_table_tunnel_route_entry_action_t value);
+extern const char* sai_metadata_get_table_bitmap_classification_entry_action_name(
+    _In_ sai_table_bitmap_classification_entry_action_t value);
 
-extern const char* sai_metadata_get_table_tunnel_route_entry_stat_name(
-    _In_ sai_table_tunnel_route_entry_stat_t value);
+extern const char* sai_metadata_get_table_bitmap_classification_entry_stat_name(
+    _In_ sai_table_bitmap_classification_entry_stat_t value);
 
-extern const char* sai_metadata_get_table_vnet_entry_action_name(
-    _In_ sai_table_vnet_entry_action_t value);
+extern const char* sai_metadata_get_table_bitmap_router_entry_action_name(
+    _In_ sai_table_bitmap_router_entry_action_t value);
 
-extern const char* sai_metadata_get_table_vnet_entry_stat_name(
-    _In_ sai_table_vnet_entry_stat_t value);
+extern const char* sai_metadata_get_table_bitmap_router_entry_stat_name(
+    _In_ sai_table_bitmap_router_entry_stat_t value);
 
 extern const char* sai_metadata_get_tam_microburst_stat_name(
     _In_ sai_tam_microburst_stat_t value);
@@ -838,8 +838,8 @@ extern const sai_object_type_info_t sai_metadata_object_type_info_SAI_OBJECT_TYP
 extern const sai_object_type_info_t sai_metadata_object_type_info_SAI_OBJECT_TYPE_BFD_SESSION;
 extern const sai_object_type_info_t sai_metadata_object_type_info_SAI_OBJECT_TYPE_ISOLATION_GROUP;
 extern const sai_object_type_info_t sai_metadata_object_type_info_SAI_OBJECT_TYPE_ISOLATION_GROUP_MEMBER;
-extern const sai_object_type_info_t sai_metadata_object_type_info_SAI_OBJECT_TYPE_TABLE_VNET_ENTRY;
-extern const sai_object_type_info_t sai_metadata_object_type_info_SAI_OBJECT_TYPE_TABLE_TUNNEL_ROUTE_ENTRY;
+extern const sai_object_type_info_t sai_metadata_object_type_info_SAI_OBJECT_TYPE_TABLE_BITMAP_CLASSIFICATION_ENTRY;
+extern const sai_object_type_info_t sai_metadata_object_type_info_SAI_OBJECT_TYPE_TABLE_BITMAP_ROUTER_ENTRY;
 
 /* Object infos table */
 
@@ -1289,21 +1289,21 @@ extern int sai_serialize_switch_switching_mode(
     _Out_ char *buffer,
     _In_ sai_switch_switching_mode_t switch_switching_mode);
 
-extern int sai_serialize_table_tunnel_route_entry_action(
+extern int sai_serialize_table_bitmap_classification_entry_action(
     _Out_ char *buffer,
-    _In_ sai_table_tunnel_route_entry_action_t table_tunnel_route_entry_action);
+    _In_ sai_table_bitmap_classification_entry_action_t table_bitmap_classification_entry_action);
 
-extern int sai_serialize_table_tunnel_route_entry_stat(
+extern int sai_serialize_table_bitmap_classification_entry_stat(
     _Out_ char *buffer,
-    _In_ sai_table_tunnel_route_entry_stat_t table_tunnel_route_entry_stat);
+    _In_ sai_table_bitmap_classification_entry_stat_t table_bitmap_classification_entry_stat);
 
-extern int sai_serialize_table_vnet_entry_action(
+extern int sai_serialize_table_bitmap_router_entry_action(
     _Out_ char *buffer,
-    _In_ sai_table_vnet_entry_action_t table_vnet_entry_action);
+    _In_ sai_table_bitmap_router_entry_action_t table_bitmap_router_entry_action);
 
-extern int sai_serialize_table_vnet_entry_stat(
+extern int sai_serialize_table_bitmap_router_entry_stat(
     _Out_ char *buffer,
-    _In_ sai_table_vnet_entry_stat_t table_vnet_entry_stat);
+    _In_ sai_table_bitmap_router_entry_stat_t table_bitmap_router_entry_stat);
 
 extern int sai_serialize_tam_microburst_stat(
     _Out_ char *buffer,
@@ -2036,21 +2036,21 @@ extern int sai_deserialize_switch_switching_mode(
     _In_ const char *buffer,
     _Out_ sai_switch_switching_mode_t *switch_switching_mode);
 
-extern int sai_deserialize_table_tunnel_route_entry_action(
+extern int sai_deserialize_table_bitmap_classification_entry_action(
     _In_ const char *buffer,
-    _Out_ sai_table_tunnel_route_entry_action_t *table_tunnel_route_entry_action);
+    _Out_ sai_table_bitmap_classification_entry_action_t *table_bitmap_classification_entry_action);
 
-extern int sai_deserialize_table_tunnel_route_entry_stat(
+extern int sai_deserialize_table_bitmap_classification_entry_stat(
     _In_ const char *buffer,
-    _Out_ sai_table_tunnel_route_entry_stat_t *table_tunnel_route_entry_stat);
+    _Out_ sai_table_bitmap_classification_entry_stat_t *table_bitmap_classification_entry_stat);
 
-extern int sai_deserialize_table_vnet_entry_action(
+extern int sai_deserialize_table_bitmap_router_entry_action(
     _In_ const char *buffer,
-    _Out_ sai_table_vnet_entry_action_t *table_vnet_entry_action);
+    _Out_ sai_table_bitmap_router_entry_action_t *table_bitmap_router_entry_action);
 
-extern int sai_deserialize_table_vnet_entry_stat(
+extern int sai_deserialize_table_bitmap_router_entry_stat(
     _In_ const char *buffer,
-    _Out_ sai_table_vnet_entry_stat_t *table_vnet_entry_stat);
+    _Out_ sai_table_bitmap_router_entry_stat_t *table_bitmap_router_entry_stat);
 
 extern int sai_deserialize_tam_microburst_stat(
     _In_ const char *buffer,
