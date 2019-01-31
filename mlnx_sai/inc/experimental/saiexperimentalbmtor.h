@@ -53,8 +53,6 @@ typedef enum _sai_table_bitmap_router_entry_action_t
 
     SAI_TABLE_BITMAP_ROUTER_ENTRY_ACTION_TO_LOCAL,
 
-    SAI_TABLE_BITMAP_ROUTER_ENTRY_ACTION_TO_PORT,
-
     SAI_TABLE_BITMAP_ROUTER_ENTRY_ACTION_TO_CPU,
 
     SAI_TABLE_BITMAP_ROUTER_ENTRY_ACTION_DROP,
@@ -190,16 +188,6 @@ typedef enum _sai_table_bitmap_router_entry_attr_t
      * @condition SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_ACTION == SAI_TABLE_BITMAP_ROUTER_ENTRY_ACTION_TO_LOCAL
      */
     SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_ROUTER_INTERFACE,
-
-    /**
-     * @brief Action to_port parameter port_id
-     *
-     * @type sai_object_id_t
-     * @flags MANDATORY_ON_CREATE | CREATE_ONLY
-     * @objects SAI_OBJECT_TYPE_PORT
-     * @condition SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_ACTION == SAI_TABLE_BITMAP_ROUTER_ENTRY_ACTION_TO_PORT
-     */
-    SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_PORT_ID,
 
     /**
      * @brief Action to_cpu parameter trap_id

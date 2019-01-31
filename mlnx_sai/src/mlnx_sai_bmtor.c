@@ -1,7 +1,5 @@
 //#include <sai_ext.h>
 #include <mlnx_sai.h>
-#include <saitypesextensions.h>
-#include "saiexperimentalbmtor.h"
 #include <fx_base_api.h>
 #include <flextrum_types.h>
 
@@ -116,12 +114,11 @@ sai_status_t mlnx_create_table_bitmap_classification_entry(
                  find_attrib_in_list(attr_count, attr_list, SAI_TABLE_BITMAP_CLASSIFICATION_ENTRY_ATTR_ROUTER_INTERFACE_KEY, &attr, &attr_idx)))
         {
             if (SAI_STATUS_SUCCESS !=
-                (sai_status = mlnx_object_to_type(attr->oid, SAI_OBJECT_TYPE_ROUTER_INTERFACE, (uint32_t *)&bitmap_classification_router_interface_key, NULL)))
+                (sai_status = mlnx_rif_oid_to_sdk_rif_id(attr->oid, &bitmap_classification_router_interface_key)))
             {
                 MLNX_SAI_LOG_ERR("Failed to get sx handle for router_interface_key\n");
                 return SAI_STATUS_INVALID_ATTR_VALUE_0 + attr_idx;
             }
-        mlnx_rif_oid_to_sdk_rif_id(attr->oid, &bitmap_classification_router_interface_key);
         bitmap_classification_keys[keys_idx].key.data = (uint8_t *)&bitmap_classification_router_interface_key;
         bitmap_classification_keys[keys_idx].key.len  = sizeof(bitmap_classification_router_interface_key);
         keys_idx++;
@@ -205,8 +202,6 @@ fx_action_id_t get_bitmap_router_fx_action(
             return CONTROL_IN_RIF_TO_NEXTHOP_ID;
         case SAI_TABLE_BITMAP_ROUTER_ENTRY_ACTION_TO_LOCAL:
             return CONTROL_IN_RIF_TO_LOCAL_ID;
-        case SAI_TABLE_BITMAP_ROUTER_ENTRY_ACTION_TO_PORT:
-            return CONTROL_IN_RIF_TO_PORT_ID;
         case SAI_TABLE_BITMAP_ROUTER_ENTRY_ACTION_TO_CPU:
             return CONTROL_IN_RIF_TO_CPU_ID;
         case SAI_TABLE_BITMAP_ROUTER_ENTRY_ACTION_DROP:
@@ -239,7 +234,7 @@ sai_status_t mlnx_create_table_bitmap_router_entry(
     }
 
     fx_key_t bitmap_router_keys[2];
-    fx_param_t bitmap_router_params[4];
+    fx_param_t bitmap_router_params[3];
     fx_key_list_t bitmap_router_key_list;
     bitmap_router_key_list.keys = bitmap_router_keys;
     fx_param_list_t bitmap_router_param_list;
@@ -312,9 +307,9 @@ sai_status_t mlnx_create_table_bitmap_router_entry(
             (sai_status =
                  find_attrib_in_list(attr_count, attr_list, SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_DST_IP_KEY, &attr, &attr_idx)))
         {
-            memcpy(&bitmap_router_dst_ip_key, &attr->ipaddr.addr.ip4, sizeof(uint32_t));
-            memcpy(&bitmap_router_dst_ip_key_mask, &attr->ipprefix.mask.ip4, sizeof(uint32_t));
+            memcpy(&bitmap_router_dst_ip_key, &attr->ipprefix.addr.ip4, sizeof(uint32_t));
             bitmap_router_dst_ip_key = htonl(bitmap_router_dst_ip_key);
+            memcpy(&bitmap_router_dst_ip_key_mask, &attr->ipprefix.mask.ip4, sizeof(uint32_t));
             bitmap_router_dst_ip_key_mask = htonl(bitmap_router_dst_ip_key_mask);
         bitmap_router_keys[keys_idx].key.data = (uint8_t *)&bitmap_router_dst_ip_key;
         bitmap_router_keys[keys_idx].key.len  = sizeof(bitmap_router_dst_ip_key);
@@ -360,12 +355,11 @@ sai_status_t mlnx_create_table_bitmap_router_entry(
                  find_attrib_in_list(attr_count, attr_list, SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_ROUTER_INTERFACE, &attr, &attr_idx)))
         {
             if (SAI_STATUS_SUCCESS !=
-                (sai_status = mlnx_object_to_type(attr->oid, SAI_OBJECT_TYPE_ROUTER_INTERFACE, (uint32_t *)&bitmap_router_router_interface, NULL)))
+                (sai_status = mlnx_rif_oid_to_sdk_rif_id(attr->oid, &bitmap_router_router_interface)))
             {
                 MLNX_SAI_LOG_ERR("Failed to get sx handle for router_interface\n");
                 return SAI_STATUS_INVALID_ATTR_VALUE_0 + attr_idx;
             }
-        mlnx_rif_oid_to_sdk_rif_id(attr->oid, &bitmap_router_router_interface);
         bitmap_router_params[params_idx].data = (uint8_t *)&bitmap_router_router_interface;
         bitmap_router_params[params_idx].len  = sizeof(bitmap_router_router_interface);
         params_idx++;
@@ -373,30 +367,6 @@ sai_status_t mlnx_create_table_bitmap_router_entry(
         else
         {
             MLNX_SAI_LOG_ERR("Did not receive mandatory SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_ROUTER_INTERFACE attribute\n");
-            return SAI_STATUS_INVALID_PARAMETER;
-        }
-        }
-
-        uint32_t bitmap_router_port_id;
-        if (flextrum_action == CONTROL_IN_RIF_TO_PORT_ID)
-        {
-        if (SAI_STATUS_SUCCESS ==
-            (sai_status =
-                 find_attrib_in_list(attr_count, attr_list, SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_PORT_ID, &attr, &attr_idx)))
-        {
-            if (SAI_STATUS_SUCCESS !=
-                (sai_status = mlnx_object_to_type(attr->oid, SAI_OBJECT_TYPE_PORT, (uint32_t *)&bitmap_router_port_id, NULL)))
-            {
-                MLNX_SAI_LOG_ERR("Failed to get sx handle for port_id\n");
-                return SAI_STATUS_INVALID_ATTR_VALUE_0 + attr_idx;
-            }
-        bitmap_router_params[params_idx].data = (uint8_t *)&bitmap_router_port_id;
-        bitmap_router_params[params_idx].len  = sizeof(bitmap_router_port_id);
-        params_idx++;
-        }
-        else
-        {
-            MLNX_SAI_LOG_ERR("Did not receive mandatory SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_PORT_ID attribute\n");
             return SAI_STATUS_INVALID_PARAMETER;
         }
         }
@@ -562,14 +532,22 @@ sai_status_t sai_ext_api_uninitialize()
 {
     g_initialized = false;
     sx_port_log_id_t port_list[PORT_NUM];
-    uint32_t num_of_ports = PORT_NUM;
+    sx_router_interface_t rif_list[RIF_NUM];
+    uint32_t num_of_ports = 0;
+    uint32_t num_of_rifs = 0;
     sx_status_t rc = fx_get_bindable_port_list(fx_handle, port_list, &num_of_ports);
     if (rc)
     {
         printf("Error - rc:%d\n", rc);
         return rc;
     }
-        rc = fx_pipe_destroy(fx_handle, FX_CONTROL_IN_RIF, (void *)port_list, num_of_ports);
+    rc = fx_get_bindable_rif_list(fx_handle, rif_list, &num_of_rifs);
+    if (rc)
+    {
+        printf("Error - rc:%d\n", rc);
+        return rc;
+    }
+        rc = fx_pipe_destroy(fx_handle, FX_CONTROL_IN_RIF, (void *)rif_list, num_of_rifs);
         if (rc) {
             printf("Error - rc:%d\n", rc);
             return rc;

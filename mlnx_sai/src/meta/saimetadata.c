@@ -7740,7 +7740,6 @@ const sai_enum_metadata_t sai_metadata_enum_sai_table_bitmap_classification_entr
 const sai_table_bitmap_router_entry_action_t sai_metadata_sai_table_bitmap_router_entry_action_t_enum_values[] = {
     SAI_TABLE_BITMAP_ROUTER_ENTRY_ACTION_TO_NEXTHOP,
     SAI_TABLE_BITMAP_ROUTER_ENTRY_ACTION_TO_LOCAL,
-    SAI_TABLE_BITMAP_ROUTER_ENTRY_ACTION_TO_PORT,
     SAI_TABLE_BITMAP_ROUTER_ENTRY_ACTION_TO_CPU,
     SAI_TABLE_BITMAP_ROUTER_ENTRY_ACTION_DROP,
     SAI_TABLE_BITMAP_ROUTER_ENTRY_ACTION_NOACTION,
@@ -7749,7 +7748,6 @@ const sai_table_bitmap_router_entry_action_t sai_metadata_sai_table_bitmap_route
 const char* const sai_metadata_sai_table_bitmap_router_entry_action_t_enum_values_names[] = {
     "SAI_TABLE_BITMAP_ROUTER_ENTRY_ACTION_TO_NEXTHOP",
     "SAI_TABLE_BITMAP_ROUTER_ENTRY_ACTION_TO_LOCAL",
-    "SAI_TABLE_BITMAP_ROUTER_ENTRY_ACTION_TO_PORT",
     "SAI_TABLE_BITMAP_ROUTER_ENTRY_ACTION_TO_CPU",
     "SAI_TABLE_BITMAP_ROUTER_ENTRY_ACTION_DROP",
     "SAI_TABLE_BITMAP_ROUTER_ENTRY_ACTION_NOACTION",
@@ -7758,7 +7756,6 @@ const char* const sai_metadata_sai_table_bitmap_router_entry_action_t_enum_value
 const char* const sai_metadata_sai_table_bitmap_router_entry_action_t_enum_values_short_names[] = {
     "TO_NEXTHOP",
     "TO_LOCAL",
-    "TO_PORT",
     "TO_CPU",
     "DROP",
     "NOACTION",
@@ -7766,7 +7763,7 @@ const char* const sai_metadata_sai_table_bitmap_router_entry_action_t_enum_value
 };
 const sai_enum_metadata_t sai_metadata_enum_sai_table_bitmap_router_entry_action_t = {
     .name              = "sai_table_bitmap_router_entry_action_t",
-    .valuescount       = 6,
+    .valuescount       = 5,
     .values            = (const int*)sai_metadata_sai_table_bitmap_router_entry_action_t_enum_values,
     .valuesnames       = sai_metadata_sai_table_bitmap_router_entry_action_t_enum_values_names,
     .valuesshortnames  = sai_metadata_sai_table_bitmap_router_entry_action_t_enum_values_short_names,
@@ -7780,7 +7777,6 @@ const sai_table_bitmap_router_entry_attr_t sai_metadata_sai_table_bitmap_router_
     SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_DST_IP_KEY,
     SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_NEXT_HOP,
     SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_ROUTER_INTERFACE,
-    SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_PORT_ID,
     SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_TRAP_ID,
     -1
 };
@@ -7792,7 +7788,6 @@ const char* const sai_metadata_sai_table_bitmap_router_entry_attr_t_enum_values_
     "SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_DST_IP_KEY",
     "SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_NEXT_HOP",
     "SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_ROUTER_INTERFACE",
-    "SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_PORT_ID",
     "SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_TRAP_ID",
     NULL
 };
@@ -7804,13 +7799,12 @@ const char* const sai_metadata_sai_table_bitmap_router_entry_attr_t_enum_values_
     "DST_IP_KEY",
     "NEXT_HOP",
     "ROUTER_INTERFACE",
-    "PORT_ID",
     "TRAP_ID",
     NULL
 };
 const sai_enum_metadata_t sai_metadata_enum_sai_table_bitmap_router_entry_attr_t = {
     .name              = "sai_table_bitmap_router_entry_attr_t",
-    .valuescount       = 9,
+    .valuescount       = 8,
     .values            = (const int*)sai_metadata_sai_table_bitmap_router_entry_attr_t_enum_values,
     .valuesnames       = sai_metadata_sai_table_bitmap_router_entry_attr_t_enum_values_names,
     .valuesshortnames  = sai_metadata_sai_table_bitmap_router_entry_attr_t_enum_values_short_names,
@@ -45250,63 +45244,6 @@ const sai_attr_metadata_t sai_metadata_attr_SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_R
     .capabilitylength              = 0,
     .isextensionattr               = false,
 };
-const sai_object_type_t sai_metadata_SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_PORT_ID_allowed_objects[] = {
-    SAI_OBJECT_TYPE_PORT,
-    -1
-};
-const sai_attr_condition_t sai_metadata_condition_SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_PORT_ID_0 = {
-        .attrid = SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_ACTION,
-        .condition = { .s32 = SAI_TABLE_BITMAP_ROUTER_ENTRY_ACTION_TO_PORT }
-};
-const sai_attr_condition_t* const sai_metadata_conditions_SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_PORT_ID[] = {
-    &sai_metadata_condition_SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_PORT_ID_0,
-    NULL
-};
-const sai_attr_metadata_t sai_metadata_attr_SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_PORT_ID = {
-    .objecttype                    = SAI_OBJECT_TYPE_TABLE_BITMAP_ROUTER_ENTRY,
-    .attrid                        = SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_PORT_ID,
-    .attridname                    = "SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_PORT_ID",
-    .brief                         = "Action to_port parameter port_id.",
-    .attrvaluetype                 = SAI_ATTR_VALUE_TYPE_OBJECT_ID,
-    .flags                         = (sai_attr_flags_t)(SAI_ATTR_FLAGS_MANDATORY_ON_CREATE|SAI_ATTR_FLAGS_CREATE_ONLY),
-    .allowedobjecttypes            = sai_metadata_SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_PORT_ID_allowed_objects,
-    .allowedobjecttypeslength      = 1,
-    .allowrepetitiononlist         = false,
-    .allowmixedobjecttypes         = false,
-    .allowemptylist                = false,
-    .allownullobjectid             = false,
-    .isoidattribute                = (1 > 0),
-    .defaultvaluetype              = SAI_DEFAULT_VALUE_TYPE_NONE,
-    .defaultvalue                  = NULL,
-    .defaultvalueobjecttype        = SAI_OBJECT_TYPE_NULL,
-    .defaultvalueattrid            = SAI_INVALID_ATTRIBUTE_ID,
-    .storedefaultvalue             = false,
-    .isenum                        = false,
-    .isenumlist                    = false,
-    .enummetadata                  = NULL,
-    .conditiontype                 = SAI_ATTR_CONDITION_TYPE_OR,
-    .conditions                    = sai_metadata_conditions_SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_PORT_ID,
-    .conditionslength              = 1,
-    .isconditional                 = (1 != 0),
-    .validonlytype                 = SAI_ATTR_CONDITION_TYPE_NONE,
-    .validonly                     = NULL,
-    .validonlylength               = 0,
-    .isvalidonly                   = (0 != 0),
-    .getsave                       = false,
-    .isvlan                        = false,
-    .isaclfield                    = false,
-    .isaclaction                   = false,
-    .ismandatoryoncreate           = true,
-    .iscreateonly                  = true,
-    .iscreateandset                = false,
-    .isreadonly                    = false,
-    .iskey                         = false,
-    .isprimitive                   = true,
-    .notificationtype              = -1,
-    .capability                    = NULL,
-    .capabilitylength              = 0,
-    .isextensionattr               = false,
-};
 const sai_object_type_t sai_metadata_SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_TRAP_ID_allowed_objects[] = {
     SAI_OBJECT_TYPE_HOSTIF_TRAP,
     -1
@@ -53846,7 +53783,6 @@ const sai_attr_metadata_t* const sai_metadata_object_type_sai_table_bitmap_route
     &sai_metadata_attr_SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_DST_IP_KEY,
     &sai_metadata_attr_SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_NEXT_HOP,
     &sai_metadata_attr_SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_ROUTER_INTERFACE,
-    &sai_metadata_attr_SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_PORT_ID,
     &sai_metadata_attr_SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_TRAP_ID,
     NULL
 };
@@ -55741,12 +55677,6 @@ const sai_rev_graph_member_t sai_metadata_SAI_OBJECT_TYPE_PORT_rev_graph_member_
     .attrmetadata        = &sai_metadata_attr_SAI_SWITCH_ATTR_PORT_LIST,
     .structmember        = NULL,
 };
-const sai_rev_graph_member_t sai_metadata_SAI_OBJECT_TYPE_PORT_rev_graph_member_31 = {
-    .objecttype          = SAI_OBJECT_TYPE_PORT,
-    .depobjecttype       = SAI_OBJECT_TYPE_TABLE_BITMAP_ROUTER_ENTRY,
-    .attrmetadata        = &sai_metadata_attr_SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_PORT_ID,
-    .structmember        = NULL,
-};
 const sai_rev_graph_member_t* const sai_metadata_SAI_OBJECT_TYPE_PORT_rev_graph_members[] = {
     &sai_metadata_SAI_OBJECT_TYPE_PORT_rev_graph_member_0,
     &sai_metadata_SAI_OBJECT_TYPE_PORT_rev_graph_member_1,
@@ -55779,7 +55709,6 @@ const sai_rev_graph_member_t* const sai_metadata_SAI_OBJECT_TYPE_PORT_rev_graph_
     &sai_metadata_SAI_OBJECT_TYPE_PORT_rev_graph_member_28,
     &sai_metadata_SAI_OBJECT_TYPE_PORT_rev_graph_member_29,
     &sai_metadata_SAI_OBJECT_TYPE_PORT_rev_graph_member_30,
-    &sai_metadata_SAI_OBJECT_TYPE_PORT_rev_graph_member_31,
     NULL
 };
 sai_status_t sai_metadata_generic_create_SAI_OBJECT_TYPE_PORT(
@@ -55821,7 +55750,7 @@ const sai_object_type_info_t sai_metadata_object_type_info_SAI_OBJECT_TYPE_PORT 
     .structmembers        = NULL,
     .structmemberscount   = 0,
     .revgraphmembers      = sai_metadata_SAI_OBJECT_TYPE_PORT_rev_graph_members,
-    .revgraphmemberscount = 32,
+    .revgraphmemberscount = 31,
     .create               = sai_metadata_generic_create_SAI_OBJECT_TYPE_PORT,
     .remove               = sai_metadata_generic_remove_SAI_OBJECT_TYPE_PORT,
     .set                  = sai_metadata_generic_set_SAI_OBJECT_TYPE_PORT,
@@ -61540,7 +61469,7 @@ const sai_object_type_info_t sai_metadata_object_type_info_SAI_OBJECT_TYPE_TABLE
     .attridend            = SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_END,
     .enummetadata         = &sai_metadata_enum_sai_table_bitmap_router_entry_attr_t,
     .attrmetadata         = sai_metadata_object_type_sai_table_bitmap_router_entry_attr_t,
-    .attrmetadatalength   = 9,
+    .attrmetadatalength   = 8,
     .isnonobjectid        = false,
     .isobjectid           = !false,
     .structmembers        = NULL,
@@ -62394,7 +62323,6 @@ const sai_attr_metadata_t* const sai_metadata_attr_sorted_by_id_name[] = {
     &sai_metadata_attr_SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_IN_RIF_METADATA_KEY,
     &sai_metadata_attr_SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_IN_RIF_METADATA_MASK,
     &sai_metadata_attr_SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_NEXT_HOP,
-    &sai_metadata_attr_SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_PORT_ID,
     &sai_metadata_attr_SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_PRIORITY,
     &sai_metadata_attr_SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_ROUTER_INTERFACE,
     &sai_metadata_attr_SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_TRAP_ID,
@@ -62543,7 +62471,7 @@ const sai_attr_metadata_t* const sai_metadata_attr_sorted_by_id_name[] = {
     &sai_metadata_attr_SAI_WRED_ATTR_YELLOW_MIN_THRESHOLD,
     NULL
 };
-const size_t sai_metadata_attr_sorted_by_id_name_count = 897;
+const size_t sai_metadata_attr_sorted_by_id_name_count = 896;
 
 /* SAI notifications struct */
 

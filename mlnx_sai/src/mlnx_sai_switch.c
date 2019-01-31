@@ -516,6 +516,22 @@ static sai_status_t mlnx_switch_attr_set(_In_ const sai_object_key_t      *key,
 static sai_status_t mlnx_switch_pre_shutdown_set(_In_ const sai_object_key_t      *key,
                                                  _In_ const sai_attribute_value_t *value,
                                                  void                             *arg);
+static sai_status_t mlnx_switch_vxlan_default_port_get(_In_ const sai_object_key_t   *key,
+                                                       _Inout_ sai_attribute_value_t *value,
+                                                       _In_ uint32_t                  attr_index,
+                                                       _Inout_ vendor_cache_t        *cache,
+                                                       void                          *arg);
+static sai_status_t mlnx_switch_vxlan_default_port_set(_In_ const sai_object_key_t      *key,
+                                                       _In_ const sai_attribute_value_t *value,
+                                                       void                             *arg);
+static sai_status_t mlnx_switch_vxlan_default_router_mac_get(_In_ const sai_object_key_t   *key,
+                                                             _Inout_ sai_attribute_value_t *value,
+                                                             _In_ uint32_t                  attr_index,
+                                                             _Inout_ vendor_cache_t        *cache,
+                                                             void                          *arg);
+static sai_status_t mlnx_switch_vxlan_default_router_mac_set(_In_ const sai_object_key_t      *key,
+                                                             _In_ const sai_attribute_value_t *value,
+                                                             void                             *arg);
 static const sai_vendor_attribute_entry_t switch_vendor_attribs[] = {
     { SAI_SWITCH_ATTR_PORT_NUMBER,
       { false, false, false, true },
@@ -1082,6 +1098,16 @@ static const sai_vendor_attribute_entry_t switch_vendor_attribs[] = {
       { true, false, true, true },
       NULL, NULL,
       mlnx_switch_pre_shutdown_set, NULL },
+    { SAI_SWITCH_ATTR_VXLAN_DEFAULT_PORT,
+      { false, false, true, true },
+      { false, false, true, true },
+      mlnx_switch_vxlan_default_port_get, NULL,
+      mlnx_switch_vxlan_default_port_set, NULL },
+    { SAI_SWITCH_ATTR_VXLAN_DEFAULT_ROUTER_MAC,
+      { false, false, true, true },
+      { false, false, true, true },
+      mlnx_switch_vxlan_default_router_mac_get, NULL,
+      mlnx_switch_vxlan_default_router_mac_set, NULL },
     { END_FUNCTIONALITY_ATTRIBS_ID,
       { false, false, false, false },
       { false, false, false, false },
@@ -7578,6 +7604,146 @@ static sai_status_t mlnx_default_bridge_id_get(_In_ const sai_object_key_t   *ke
     value->oid = mlnx_bridge_default_1q_oid();
 
     sai_db_unlock();
+
+    SX_LOG_EXIT();
+    return SAI_STATUS_SUCCESS;
+}
+
+static sai_status_t mlnx_switch_vxlan_default_port_get(_In_ const sai_object_key_t   *key,
+                                                       _Inout_ sai_attribute_value_t *value,
+                                                       _In_ uint32_t                  attr_index,
+                                                       _Inout_ vendor_cache_t        *cache,
+                                                       void                          *arg)
+{
+    SX_LOG_ENTER();
+
+    sxd_status_t              sxd_ret = SXD_STATUS_SUCCESS;
+    sxd_handle                sxd_handle   = 0;
+    uint32_t                  dev_num      = 1;
+    char                      dev_name[MAX_NAME_LEN];
+    char                     *dev_names[1] = { dev_name };
+    struct ku_mprs_reg        mprs_reg_data;
+    sxd_reg_meta_t            mprs_reg_meta;
+
+    memset(&mprs_reg_meta, 0, sizeof(mprs_reg_meta));
+    memset(&mprs_reg_data, 0, sizeof(mprs_reg_data));
+
+    sxd_ret = sxd_access_reg_init(0, log_cb, 0);
+    if (SXD_CHECK_FAIL(sxd_ret)) {
+        SX_LOG_ERR("Failed to init access reg - %s.\n", SXD_STATUS_MSG(sxd_ret));
+        return SAI_STATUS_FAILURE;
+    }
+
+    /* get device list from the devices directory */
+    sxd_ret = sxd_get_dev_list(dev_names, &dev_num);
+    if (SXD_CHECK_FAIL(sxd_ret)) {
+        SX_LOG_ERR("sxd_get_dev_list error %s.\n", SXD_STATUS_MSG(sxd_ret));
+        return SAI_STATUS_FAILURE;
+    }
+
+    /* open the first device */
+    sxd_ret = sxd_open_device(dev_name, &sxd_handle);
+    if (SXD_CHECK_FAIL(sxd_ret)) {
+        SX_LOG_ERR("sxd_open_device error %s.\n", SXD_STATUS_MSG(sxd_ret));
+        return SAI_STATUS_FAILURE;
+    }
+
+    mprs_reg_meta.swid = 0;
+    mprs_reg_meta.dev_id = 1;
+    mprs_reg_meta.access_cmd = SXD_ACCESS_CMD_GET;
+
+    sxd_ret = sxd_access_reg_mprs(&mprs_reg_data, &mprs_reg_meta, 1, NULL, NULL);
+
+    if (SXD_CHECK_FAIL(sxd_ret)) {
+        SX_LOG_ERR("sxd_access_reg_mprs error %s.\n", SXD_STATUS_MSG(sxd_ret));
+        return SAI_STATUS_FAILURE;
+    }
+
+    value->u16 = mprs_reg_data.vxlan_udp_dport;
+
+    SX_LOG_EXIT();
+    return SAI_STATUS_SUCCESS;
+}
+
+static sai_status_t mlnx_switch_vxlan_default_port_set(_In_ const sai_object_key_t      *key,
+                                                       _In_ const sai_attribute_value_t *value,
+                                                       void                             *arg)
+{
+    SX_LOG_ENTER();
+
+    sxd_status_t              sxd_ret = SXD_STATUS_SUCCESS;
+    sxd_handle                sxd_handle   = 0;
+    uint32_t                  dev_num      = 1;
+    char                      dev_name[MAX_NAME_LEN];
+    char                     *dev_names[1] = { dev_name };
+    struct ku_mprs_reg        mprs_reg_data;
+    sxd_reg_meta_t            mprs_reg_meta;
+
+    memset(&mprs_reg_meta, 0, sizeof(mprs_reg_meta));
+    memset(&mprs_reg_data, 0, sizeof(mprs_reg_data));
+
+    sxd_ret = sxd_access_reg_init(0, log_cb, 0);
+    if (SXD_CHECK_FAIL(sxd_ret)) {
+        SX_LOG_ERR("Failed to init access reg - %s.\n", SXD_STATUS_MSG(sxd_ret));
+        return SAI_STATUS_FAILURE;
+    }
+
+    /* get device list from the devices directory */
+    sxd_ret = sxd_get_dev_list(dev_names, &dev_num);
+    if (SXD_CHECK_FAIL(sxd_ret)) {
+        SX_LOG_ERR("sxd_get_dev_list error %s.\n", SXD_STATUS_MSG(sxd_ret));
+        return SAI_STATUS_FAILURE;
+    }
+
+    /* open the first device */
+    sxd_ret = sxd_open_device(dev_name, &sxd_handle);
+    if (SXD_CHECK_FAIL(sxd_ret)) {
+        SX_LOG_ERR("sxd_open_device error %s.\n", SXD_STATUS_MSG(sxd_ret));
+        return SAI_STATUS_FAILURE;
+    }
+
+    mprs_reg_meta.swid = 0;
+    mprs_reg_meta.dev_id = 1;
+    mprs_reg_meta.access_cmd = SXD_ACCESS_CMD_GET;
+
+    sxd_ret = sxd_access_reg_mprs(&mprs_reg_data, &mprs_reg_meta, 1, NULL, NULL);
+
+    if (SXD_CHECK_FAIL(sxd_ret)) {
+        SX_LOG_ERR("sxd_access_reg_mprs error %s.\n", SXD_STATUS_MSG(sxd_ret));
+        return SAI_STATUS_FAILURE;
+    }
+
+    mprs_reg_meta.access_cmd = SXD_ACCESS_CMD_ADD;
+    mprs_reg_data.vxlan_udp_dport = value->u16;
+
+    sxd_ret = sxd_access_reg_mprs(&mprs_reg_data, &mprs_reg_meta, 1, NULL, NULL);
+
+    if (SXD_CHECK_FAIL(sxd_ret)) {
+        SX_LOG_ERR("sxd_access_reg_mprs error %s.\n", SXD_STATUS_MSG(sxd_ret));
+        return SAI_STATUS_FAILURE;
+    }
+
+    SX_LOG_EXIT();
+    return SAI_STATUS_SUCCESS;
+}
+
+static sai_status_t mlnx_switch_vxlan_default_router_mac_get(_In_ const sai_object_key_t   *key,
+                                                             _Inout_ sai_attribute_value_t *value,
+                                                             _In_ uint32_t                  attr_index,
+                                                             _Inout_ vendor_cache_t        *cache,
+                                                             void                          *arg)
+{
+    SX_LOG_ENTER();
+
+    SX_LOG_EXIT();
+    return SAI_STATUS_SUCCESS;
+}
+
+static sai_status_t mlnx_switch_vxlan_default_router_mac_set(_In_ const sai_object_key_t      *key,
+                                                             _In_ const sai_attribute_value_t *value,
+                                                             void                             *arg)
+{
+    SX_LOG_ENTER();
 
     SX_LOG_EXIT();
     return SAI_STATUS_SUCCESS;
