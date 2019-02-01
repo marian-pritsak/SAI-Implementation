@@ -19,6 +19,7 @@ CFLAGS += -DCONFIG_SYSLOG
 endif
 
 lib_LTLIBRARIES = libsai.la
+noinst_LIBRARIES = libfx_base.a
 
 dist_data_DATA = sai_1710.xml \
                  sai_2010.xml \
@@ -86,6 +87,13 @@ libsai_la_SOURCES = \
                        meta/saimetadatautils.c \
                        meta/saiserialize.c
 
+
+libfx_base_a_SOURCES = fx_base_api.c \
+		       fx_base_range_match.c \
+		       sx_api_stubs.c
+
+libfx_base_a_CFLAGS = --std=gnu99 -Wno-sign-compare -Wno-vla -Wno-missing-field-initializers
+
 if XML2_ELDK5_LA_WA
 SAI_LIBXML2_ADD = ${XML2_LIB_PATH}/lib/libxml2.so
 else
@@ -94,7 +102,7 @@ endif
 
 libsai_la_LIBADD = \
                    -L$(APP_LIB_PATH)/lib -lsxapi -lsw_rm\
-		   ${SAI_LIBXML2_ADD} -lfx_base
+		   ${SAI_LIBXML2_ADD} libfx_base.a
 
 libsai_apiincludedir = $(includedir)/sai
 libsai_apiinclude_HEADERS = \
@@ -148,7 +156,14 @@ libsai_apiinclude_HEADERS = \
         $(top_srcdir)/inc/experimental/saiexperimentalbmtor.h \
         \
         $(top_srcdir)/inc/sai_windows.h \
-        $(top_srcdir)/inc/mlnx_sai.h
+        $(top_srcdir)/inc/mlnx_sai.h \
+	\
+	$(top_srcdir)/inc/flextrum_types.h \
+	$(top_srcdir)/inc/fx_base_api.h \
+	$(top_srcdir)/inc/fx_base_range_match.h \
+	$(top_srcdir)/inc/mlnx_flex_bitmap.h \
+	$(top_srcdir)/inc/mlnx_flex_types.h \
+	$(top_srcdir)/inc/sharedlib.h
 
 
 libsai_api_version=$(shell grep LIBVERSION= $(top_srcdir)/sai_interface.ver | sed 's/LIBVERSION=//')
