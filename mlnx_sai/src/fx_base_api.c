@@ -1440,7 +1440,7 @@ void fill_custom_bytes_control_in_rif_table_bitmap_router(struct fx_custom_param
 }
 
 sx_status_t create_control_in_rif_table_bitmap_router(fx_handle_t handle, sx_acl_id_t* pipe_id_list, int pipe_ind  ) {
-  const uint32_t size = 256;
+  const uint32_t size = 512;
   const uint32_t key_count = 2;
   const int table_index = 1; // 1 is replaced by macro
   struct acl_table *table = &handle->acl_tables[table_index];
