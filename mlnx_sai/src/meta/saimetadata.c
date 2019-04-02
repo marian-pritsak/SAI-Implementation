@@ -4366,21 +4366,24 @@ const sai_enum_metadata_t sai_metadata_enum_sai_next_hop_type_t = {
 const sai_object_type_extensions_t sai_metadata_sai_object_type_extensions_t_enum_values[] = {
     SAI_OBJECT_TYPE_TABLE_BITMAP_CLASSIFICATION_ENTRY,
     SAI_OBJECT_TYPE_TABLE_BITMAP_ROUTER_ENTRY,
+    SAI_OBJECT_TYPE_TABLE_L3_VXLAN_ENTRY,
     -1
 };
 const char* const sai_metadata_sai_object_type_extensions_t_enum_values_names[] = {
     "SAI_OBJECT_TYPE_TABLE_BITMAP_CLASSIFICATION_ENTRY",
     "SAI_OBJECT_TYPE_TABLE_BITMAP_ROUTER_ENTRY",
+    "SAI_OBJECT_TYPE_TABLE_L3_VXLAN_ENTRY",
     NULL
 };
 const char* const sai_metadata_sai_object_type_extensions_t_enum_values_short_names[] = {
     "TABLE_BITMAP_CLASSIFICATION_ENTRY",
     "TABLE_BITMAP_ROUTER_ENTRY",
+    "TABLE_L3_VXLAN_ENTRY",
     NULL
 };
 const sai_enum_metadata_t sai_metadata_enum_sai_object_type_extensions_t = {
     .name              = "sai_object_type_extensions_t",
-    .valuescount       = 2,
+    .valuescount       = 3,
     .values            = (const int*)sai_metadata_sai_object_type_extensions_t_enum_values,
     .valuesnames       = sai_metadata_sai_object_type_extensions_t_enum_values_names,
     .valuesshortnames  = sai_metadata_sai_object_type_extensions_t_enum_values_short_names,
@@ -4467,6 +4470,7 @@ const sai_object_type_t sai_metadata_sai_object_type_t_enum_values[] = {
     SAI_OBJECT_TYPE_ISOLATION_GROUP_MEMBER,
     SAI_OBJECT_TYPE_TABLE_BITMAP_CLASSIFICATION_ENTRY,
     SAI_OBJECT_TYPE_TABLE_BITMAP_ROUTER_ENTRY,
+    SAI_OBJECT_TYPE_TABLE_L3_VXLAN_ENTRY,
     -1
 };
 const char* const sai_metadata_sai_object_type_t_enum_values_names[] = {
@@ -4550,6 +4554,7 @@ const char* const sai_metadata_sai_object_type_t_enum_values_names[] = {
     "SAI_OBJECT_TYPE_ISOLATION_GROUP_MEMBER",
     "SAI_OBJECT_TYPE_TABLE_BITMAP_CLASSIFICATION_ENTRY",
     "SAI_OBJECT_TYPE_TABLE_BITMAP_ROUTER_ENTRY",
+    "SAI_OBJECT_TYPE_TABLE_L3_VXLAN_ENTRY",
     NULL
 };
 const char* const sai_metadata_sai_object_type_t_enum_values_short_names[] = {
@@ -4633,11 +4638,12 @@ const char* const sai_metadata_sai_object_type_t_enum_values_short_names[] = {
     "ISOLATION_GROUP_MEMBER",
     "TABLE_BITMAP_CLASSIFICATION_ENTRY",
     "TABLE_BITMAP_ROUTER_ENTRY",
+    "TABLE_L3_VXLAN_ENTRY",
     NULL
 };
 const sai_enum_metadata_t sai_metadata_enum_sai_object_type_t = {
     .name              = "sai_object_type_t",
-    .valuescount       = 80,
+    .valuescount       = 81,
     .values            = (const int*)sai_metadata_sai_object_type_t_enum_values,
     .valuesnames       = sai_metadata_sai_object_type_t_enum_values_names,
     .valuesshortnames  = sai_metadata_sai_object_type_t_enum_values_short_names,
@@ -4964,6 +4970,9 @@ const sai_port_attr_t sai_metadata_sai_port_attr_t_enum_values[] = {
     SAI_PORT_ATTR_PORT_POOL_LIST,
     SAI_PORT_ATTR_ISOLATION_GROUP,
     SAI_PORT_ATTR_PKT_TX_ENABLE,
+    SAI_PORT_ATTR_SERDES_PREEMPHASIS,
+    SAI_PORT_ATTR_SERDES_IDRIVER,
+    SAI_PORT_ATTR_SERDES_IPREDRIVER,
     -1
 };
 const char* const sai_metadata_sai_port_attr_t_enum_values_names[] = {
@@ -5054,6 +5063,9 @@ const char* const sai_metadata_sai_port_attr_t_enum_values_names[] = {
     "SAI_PORT_ATTR_PORT_POOL_LIST",
     "SAI_PORT_ATTR_ISOLATION_GROUP",
     "SAI_PORT_ATTR_PKT_TX_ENABLE",
+    "SAI_PORT_ATTR_SERDES_PREEMPHASIS",
+    "SAI_PORT_ATTR_SERDES_IDRIVER",
+    "SAI_PORT_ATTR_SERDES_IPREDRIVER",
     NULL
 };
 const char* const sai_metadata_sai_port_attr_t_enum_values_short_names[] = {
@@ -5144,11 +5156,14 @@ const char* const sai_metadata_sai_port_attr_t_enum_values_short_names[] = {
     "PORT_POOL_LIST",
     "ISOLATION_GROUP",
     "PKT_TX_ENABLE",
+    "SERDES_PREEMPHASIS",
+    "SERDES_IDRIVER",
+    "SERDES_IPREDRIVER",
     NULL
 };
 const sai_enum_metadata_t sai_metadata_enum_sai_port_attr_t = {
     .name              = "sai_port_attr_t",
-    .valuescount       = 87,
+    .valuescount       = 90,
     .values            = (const int*)sai_metadata_sai_port_attr_t_enum_values,
     .valuesnames       = sai_metadata_sai_port_attr_t_enum_values_names,
     .valuesshortnames  = sai_metadata_sai_port_attr_t_enum_values_short_names,
@@ -7775,6 +7790,7 @@ const sai_table_bitmap_router_entry_attr_t sai_metadata_sai_table_bitmap_router_
     SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_IN_RIF_METADATA_KEY,
     SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_IN_RIF_METADATA_MASK,
     SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_DST_IP_KEY,
+    SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_TUNNEL_INDEX,
     SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_NEXT_HOP,
     SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_ROUTER_INTERFACE,
     SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_TRAP_ID,
@@ -7786,6 +7802,7 @@ const char* const sai_metadata_sai_table_bitmap_router_entry_attr_t_enum_values_
     "SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_IN_RIF_METADATA_KEY",
     "SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_IN_RIF_METADATA_MASK",
     "SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_DST_IP_KEY",
+    "SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_TUNNEL_INDEX",
     "SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_NEXT_HOP",
     "SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_ROUTER_INTERFACE",
     "SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_TRAP_ID",
@@ -7797,6 +7814,7 @@ const char* const sai_metadata_sai_table_bitmap_router_entry_attr_t_enum_values_
     "IN_RIF_METADATA_KEY",
     "IN_RIF_METADATA_MASK",
     "DST_IP_KEY",
+    "TUNNEL_INDEX",
     "NEXT_HOP",
     "ROUTER_INTERFACE",
     "TRAP_ID",
@@ -7804,7 +7822,7 @@ const char* const sai_metadata_sai_table_bitmap_router_entry_attr_t_enum_values_
 };
 const sai_enum_metadata_t sai_metadata_enum_sai_table_bitmap_router_entry_attr_t = {
     .name              = "sai_table_bitmap_router_entry_attr_t",
-    .valuescount       = 8,
+    .valuescount       = 9,
     .values            = (const int*)sai_metadata_sai_table_bitmap_router_entry_attr_t_enum_values,
     .valuesnames       = sai_metadata_sai_table_bitmap_router_entry_attr_t_enum_values_names,
     .valuesshortnames  = sai_metadata_sai_table_bitmap_router_entry_attr_t_enum_values_short_names,
@@ -7831,6 +7849,84 @@ const sai_enum_metadata_t sai_metadata_enum_sai_table_bitmap_router_entry_stat_t
     .values            = (const int*)sai_metadata_sai_table_bitmap_router_entry_stat_t_enum_values,
     .valuesnames       = sai_metadata_sai_table_bitmap_router_entry_stat_t_enum_values_names,
     .valuesshortnames  = sai_metadata_sai_table_bitmap_router_entry_stat_t_enum_values_short_names,
+    .containsflags     = false,
+};
+const sai_table_l3_vxlan_entry_action_t sai_metadata_sai_table_l3_vxlan_entry_action_t_enum_values[] = {
+    SAI_TABLE_L3_VXLAN_ENTRY_ACTION_TUNNEL_ENCAP,
+    SAI_TABLE_L3_VXLAN_ENTRY_ACTION_NOACTION,
+    -1
+};
+const char* const sai_metadata_sai_table_l3_vxlan_entry_action_t_enum_values_names[] = {
+    "SAI_TABLE_L3_VXLAN_ENTRY_ACTION_TUNNEL_ENCAP",
+    "SAI_TABLE_L3_VXLAN_ENTRY_ACTION_NOACTION",
+    NULL
+};
+const char* const sai_metadata_sai_table_l3_vxlan_entry_action_t_enum_values_short_names[] = {
+    "TUNNEL_ENCAP",
+    "NOACTION",
+    NULL
+};
+const sai_enum_metadata_t sai_metadata_enum_sai_table_l3_vxlan_entry_action_t = {
+    .name              = "sai_table_l3_vxlan_entry_action_t",
+    .valuescount       = 2,
+    .values            = (const int*)sai_metadata_sai_table_l3_vxlan_entry_action_t_enum_values,
+    .valuesnames       = sai_metadata_sai_table_l3_vxlan_entry_action_t_enum_values_names,
+    .valuesshortnames  = sai_metadata_sai_table_l3_vxlan_entry_action_t_enum_values_short_names,
+    .containsflags     = false,
+};
+const sai_table_l3_vxlan_entry_attr_t sai_metadata_sai_table_l3_vxlan_entry_attr_t_enum_values[] = {
+    SAI_TABLE_L3_VXLAN_ENTRY_ATTR_ACTION,
+    SAI_TABLE_L3_VXLAN_ENTRY_ATTR_METADATA_KEY,
+    SAI_TABLE_L3_VXLAN_ENTRY_ATTR_IS_DEFAULT,
+    SAI_TABLE_L3_VXLAN_ENTRY_ATTR_TUNNEL_ID,
+    SAI_TABLE_L3_VXLAN_ENTRY_ATTR_UNDERLAY_DIP,
+    -1
+};
+const char* const sai_metadata_sai_table_l3_vxlan_entry_attr_t_enum_values_names[] = {
+    "SAI_TABLE_L3_VXLAN_ENTRY_ATTR_ACTION",
+    "SAI_TABLE_L3_VXLAN_ENTRY_ATTR_METADATA_KEY",
+    "SAI_TABLE_L3_VXLAN_ENTRY_ATTR_IS_DEFAULT",
+    "SAI_TABLE_L3_VXLAN_ENTRY_ATTR_TUNNEL_ID",
+    "SAI_TABLE_L3_VXLAN_ENTRY_ATTR_UNDERLAY_DIP",
+    NULL
+};
+const char* const sai_metadata_sai_table_l3_vxlan_entry_attr_t_enum_values_short_names[] = {
+    "ACTION",
+    "METADATA_KEY",
+    "IS_DEFAULT",
+    "TUNNEL_ID",
+    "UNDERLAY_DIP",
+    NULL
+};
+const sai_enum_metadata_t sai_metadata_enum_sai_table_l3_vxlan_entry_attr_t = {
+    .name              = "sai_table_l3_vxlan_entry_attr_t",
+    .valuescount       = 5,
+    .values            = (const int*)sai_metadata_sai_table_l3_vxlan_entry_attr_t_enum_values,
+    .valuesnames       = sai_metadata_sai_table_l3_vxlan_entry_attr_t_enum_values_names,
+    .valuesshortnames  = sai_metadata_sai_table_l3_vxlan_entry_attr_t_enum_values_short_names,
+    .containsflags     = false,
+};
+const sai_table_l3_vxlan_entry_stat_t sai_metadata_sai_table_l3_vxlan_entry_stat_t_enum_values[] = {
+    SAI_TABLE_L3_VXLAN_ENTRY_STAT_HIT_PACKETS,
+    SAI_TABLE_L3_VXLAN_ENTRY_STAT_HIT_OCTETS,
+    -1
+};
+const char* const sai_metadata_sai_table_l3_vxlan_entry_stat_t_enum_values_names[] = {
+    "SAI_TABLE_L3_VXLAN_ENTRY_STAT_HIT_PACKETS",
+    "SAI_TABLE_L3_VXLAN_ENTRY_STAT_HIT_OCTETS",
+    NULL
+};
+const char* const sai_metadata_sai_table_l3_vxlan_entry_stat_t_enum_values_short_names[] = {
+    "HIT_PACKETS",
+    "HIT_OCTETS",
+    NULL
+};
+const sai_enum_metadata_t sai_metadata_enum_sai_table_l3_vxlan_entry_stat_t = {
+    .name              = "sai_table_l3_vxlan_entry_stat_t",
+    .valuescount       = 2,
+    .values            = (const int*)sai_metadata_sai_table_l3_vxlan_entry_stat_t_enum_values,
+    .valuesnames       = sai_metadata_sai_table_l3_vxlan_entry_stat_t_enum_values_names,
+    .valuesshortnames  = sai_metadata_sai_table_l3_vxlan_entry_stat_t_enum_values_short_names,
     .containsflags     = false,
 };
 const sai_tam_attr_t sai_metadata_sai_tam_attr_t_enum_values[] = {
@@ -9273,6 +9369,9 @@ const sai_enum_metadata_t* const sai_metadata_all_enums[] = {
     &sai_metadata_enum_sai_table_bitmap_router_entry_action_t,
     &sai_metadata_enum_sai_table_bitmap_router_entry_attr_t,
     &sai_metadata_enum_sai_table_bitmap_router_entry_stat_t,
+    &sai_metadata_enum_sai_table_l3_vxlan_entry_action_t,
+    &sai_metadata_enum_sai_table_l3_vxlan_entry_attr_t,
+    &sai_metadata_enum_sai_table_l3_vxlan_entry_stat_t,
     &sai_metadata_enum_sai_tam_attr_t,
     &sai_metadata_enum_sai_tam_histogram_attr_t,
     &sai_metadata_enum_sai_tam_microburst_attr_t,
@@ -9312,7 +9411,7 @@ const sai_enum_metadata_t* const sai_metadata_all_enums[] = {
     &sai_metadata_enum_sai_wred_attr_t,
     NULL
 };
-const size_t sai_metadata_all_enums_count = 199;
+const size_t sai_metadata_all_enums_count = 202;
 const sai_enum_metadata_t* const sai_metadata_attr_enums[] = {
     &sai_metadata_enum_sai_acl_counter_attr_t,
     &sai_metadata_enum_sai_acl_entry_attr_t,
@@ -9375,6 +9474,7 @@ const sai_enum_metadata_t* const sai_metadata_attr_enums[] = {
     &sai_metadata_enum_sai_switch_attr_t,
     &sai_metadata_enum_sai_table_bitmap_classification_entry_attr_t,
     &sai_metadata_enum_sai_table_bitmap_router_entry_attr_t,
+    &sai_metadata_enum_sai_table_l3_vxlan_entry_attr_t,
     &sai_metadata_enum_sai_tam_attr_t,
     &sai_metadata_enum_sai_tam_histogram_attr_t,
     &sai_metadata_enum_sai_tam_microburst_attr_t,
@@ -9395,7 +9495,7 @@ const sai_enum_metadata_t* const sai_metadata_attr_enums[] = {
     &sai_metadata_enum_sai_wred_attr_t,
     NULL
 };
-const size_t sai_metadata_attr_enums_count = 79;
+const size_t sai_metadata_attr_enums_count = 80;
 const sai_object_type_t sai_metadata_object_types[] = {
     SAI_OBJECT_TYPE_ACL_COUNTER,
     SAI_OBJECT_TYPE_ACL_ENTRY,
@@ -9458,6 +9558,7 @@ const sai_object_type_t sai_metadata_object_types[] = {
     SAI_OBJECT_TYPE_SWITCH,
     SAI_OBJECT_TYPE_TABLE_BITMAP_CLASSIFICATION_ENTRY,
     SAI_OBJECT_TYPE_TABLE_BITMAP_ROUTER_ENTRY,
+    SAI_OBJECT_TYPE_TABLE_L3_VXLAN_ENTRY,
     SAI_OBJECT_TYPE_TAM,
     SAI_OBJECT_TYPE_TAM_HISTOGRAM,
     SAI_OBJECT_TYPE_TAM_MICROBURST,
@@ -34770,6 +34871,141 @@ const sai_attr_metadata_t sai_metadata_attr_SAI_PORT_ATTR_PKT_TX_ENABLE = {
     .capabilitylength              = 0,
     .isextensionattr               = false,
 };
+const sai_attr_metadata_t sai_metadata_attr_SAI_PORT_ATTR_SERDES_PREEMPHASIS = {
+    .objecttype                    = SAI_OBJECT_TYPE_PORT,
+    .attrid                        = SAI_PORT_ATTR_SERDES_PREEMPHASIS,
+    .attridname                    = "SAI_PORT_ATTR_SERDES_PREEMPHASIS",
+    .brief                         = "Port serdes control pre-emphasis.",
+    .attrvaluetype                 = SAI_ATTR_VALUE_TYPE_UINT32_LIST,
+    .flags                         = (sai_attr_flags_t)(SAI_ATTR_FLAGS_CREATE_AND_SET),
+    .allowedobjecttypes            = NULL,
+    .allowedobjecttypeslength      = 0,
+    .allowrepetitiononlist         = false,
+    .allowmixedobjecttypes         = false,
+    .allowemptylist                = false,
+    .allownullobjectid             = false,
+    .isoidattribute                = (0 > 0),
+    .defaultvaluetype              = SAI_DEFAULT_VALUE_TYPE_SWITCH_INTERNAL,
+    .defaultvalue                  = NULL,
+    .defaultvalueobjecttype        = SAI_OBJECT_TYPE_NULL,
+    .defaultvalueattrid            = SAI_INVALID_ATTRIBUTE_ID,
+    .storedefaultvalue             = false,
+    .isenum                        = false,
+    .isenumlist                    = false,
+    .enummetadata                  = NULL,
+    .conditiontype                 = SAI_ATTR_CONDITION_TYPE_NONE,
+    .conditions                    = NULL,
+    .conditionslength              = 0,
+    .isconditional                 = (0 != 0),
+    .validonlytype                 = SAI_ATTR_CONDITION_TYPE_NONE,
+    .validonly                     = NULL,
+    .validonlylength               = 0,
+    .isvalidonly                   = (0 != 0),
+    .getsave                       = false,
+    .isvlan                        = false,
+    .isaclfield                    = false,
+    .isaclaction                   = false,
+    .ismandatoryoncreate           = false,
+    .iscreateonly                  = false,
+    .iscreateandset                = true,
+    .isreadonly                    = false,
+    .iskey                         = false,
+    .isprimitive                   = false,
+    .notificationtype              = -1,
+    .capability                    = NULL,
+    .capabilitylength              = 0,
+    .isextensionattr               = false,
+};
+const sai_attr_metadata_t sai_metadata_attr_SAI_PORT_ATTR_SERDES_IDRIVER = {
+    .objecttype                    = SAI_OBJECT_TYPE_PORT,
+    .attrid                        = SAI_PORT_ATTR_SERDES_IDRIVER,
+    .attridname                    = "SAI_PORT_ATTR_SERDES_IDRIVER",
+    .brief                         = "Port serdes control idriver.",
+    .attrvaluetype                 = SAI_ATTR_VALUE_TYPE_UINT32_LIST,
+    .flags                         = (sai_attr_flags_t)(SAI_ATTR_FLAGS_CREATE_AND_SET),
+    .allowedobjecttypes            = NULL,
+    .allowedobjecttypeslength      = 0,
+    .allowrepetitiononlist         = false,
+    .allowmixedobjecttypes         = false,
+    .allowemptylist                = false,
+    .allownullobjectid             = false,
+    .isoidattribute                = (0 > 0),
+    .defaultvaluetype              = SAI_DEFAULT_VALUE_TYPE_SWITCH_INTERNAL,
+    .defaultvalue                  = NULL,
+    .defaultvalueobjecttype        = SAI_OBJECT_TYPE_NULL,
+    .defaultvalueattrid            = SAI_INVALID_ATTRIBUTE_ID,
+    .storedefaultvalue             = false,
+    .isenum                        = false,
+    .isenumlist                    = false,
+    .enummetadata                  = NULL,
+    .conditiontype                 = SAI_ATTR_CONDITION_TYPE_NONE,
+    .conditions                    = NULL,
+    .conditionslength              = 0,
+    .isconditional                 = (0 != 0),
+    .validonlytype                 = SAI_ATTR_CONDITION_TYPE_NONE,
+    .validonly                     = NULL,
+    .validonlylength               = 0,
+    .isvalidonly                   = (0 != 0),
+    .getsave                       = false,
+    .isvlan                        = false,
+    .isaclfield                    = false,
+    .isaclaction                   = false,
+    .ismandatoryoncreate           = false,
+    .iscreateonly                  = false,
+    .iscreateandset                = true,
+    .isreadonly                    = false,
+    .iskey                         = false,
+    .isprimitive                   = false,
+    .notificationtype              = -1,
+    .capability                    = NULL,
+    .capabilitylength              = 0,
+    .isextensionattr               = false,
+};
+const sai_attr_metadata_t sai_metadata_attr_SAI_PORT_ATTR_SERDES_IPREDRIVER = {
+    .objecttype                    = SAI_OBJECT_TYPE_PORT,
+    .attrid                        = SAI_PORT_ATTR_SERDES_IPREDRIVER,
+    .attridname                    = "SAI_PORT_ATTR_SERDES_IPREDRIVER",
+    .brief                         = "Port serdes control ipredriver.",
+    .attrvaluetype                 = SAI_ATTR_VALUE_TYPE_UINT32_LIST,
+    .flags                         = (sai_attr_flags_t)(SAI_ATTR_FLAGS_CREATE_AND_SET),
+    .allowedobjecttypes            = NULL,
+    .allowedobjecttypeslength      = 0,
+    .allowrepetitiononlist         = false,
+    .allowmixedobjecttypes         = false,
+    .allowemptylist                = false,
+    .allownullobjectid             = false,
+    .isoidattribute                = (0 > 0),
+    .defaultvaluetype              = SAI_DEFAULT_VALUE_TYPE_SWITCH_INTERNAL,
+    .defaultvalue                  = NULL,
+    .defaultvalueobjecttype        = SAI_OBJECT_TYPE_NULL,
+    .defaultvalueattrid            = SAI_INVALID_ATTRIBUTE_ID,
+    .storedefaultvalue             = false,
+    .isenum                        = false,
+    .isenumlist                    = false,
+    .enummetadata                  = NULL,
+    .conditiontype                 = SAI_ATTR_CONDITION_TYPE_NONE,
+    .conditions                    = NULL,
+    .conditionslength              = 0,
+    .isconditional                 = (0 != 0),
+    .validonlytype                 = SAI_ATTR_CONDITION_TYPE_NONE,
+    .validonly                     = NULL,
+    .validonlylength               = 0,
+    .isvalidonly                   = (0 != 0),
+    .getsave                       = false,
+    .isvlan                        = false,
+    .isaclfield                    = false,
+    .isaclaction                   = false,
+    .ismandatoryoncreate           = false,
+    .iscreateonly                  = false,
+    .iscreateandset                = true,
+    .isreadonly                    = false,
+    .iskey                         = false,
+    .isprimitive                   = false,
+    .notificationtype              = -1,
+    .capability                    = NULL,
+    .capabilitylength              = 0,
+    .isextensionattr               = false,
+};
 const sai_object_type_t sai_metadata_SAI_PORT_POOL_ATTR_PORT_ID_allowed_objects[] = {
     SAI_OBJECT_TYPE_PORT,
     -1
@@ -45130,6 +45366,59 @@ const sai_attr_metadata_t sai_metadata_attr_SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_D
     .capabilitylength              = 0,
     .isextensionattr               = false,
 };
+const sai_attr_condition_t sai_metadata_condition_SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_TUNNEL_INDEX_0 = {
+        .attrid = SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_ACTION,
+        .condition = { .s32 = SAI_TABLE_BITMAP_ROUTER_ENTRY_ACTION_TO_NEXTHOP }
+};
+const sai_attr_condition_t* const sai_metadata_conditions_SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_TUNNEL_INDEX[] = {
+    &sai_metadata_condition_SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_TUNNEL_INDEX_0,
+    NULL
+};
+const sai_attr_metadata_t sai_metadata_attr_SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_TUNNEL_INDEX = {
+    .objecttype                    = SAI_OBJECT_TYPE_TABLE_BITMAP_ROUTER_ENTRY,
+    .attrid                        = SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_TUNNEL_INDEX,
+    .attridname                    = "SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_TUNNEL_INDEX",
+    .brief                         = "Action to_nexthop parameter tunnel_index.",
+    .attrvaluetype                 = SAI_ATTR_VALUE_TYPE_UINT16,
+    .flags                         = (sai_attr_flags_t)(SAI_ATTR_FLAGS_MANDATORY_ON_CREATE|SAI_ATTR_FLAGS_CREATE_ONLY),
+    .allowedobjecttypes            = NULL,
+    .allowedobjecttypeslength      = 0,
+    .allowrepetitiononlist         = false,
+    .allowmixedobjecttypes         = false,
+    .allowemptylist                = false,
+    .allownullobjectid             = false,
+    .isoidattribute                = (0 > 0),
+    .defaultvaluetype              = SAI_DEFAULT_VALUE_TYPE_NONE,
+    .defaultvalue                  = NULL,
+    .defaultvalueobjecttype        = SAI_OBJECT_TYPE_NULL,
+    .defaultvalueattrid            = SAI_INVALID_ATTRIBUTE_ID,
+    .storedefaultvalue             = false,
+    .isenum                        = false,
+    .isenumlist                    = false,
+    .enummetadata                  = NULL,
+    .conditiontype                 = SAI_ATTR_CONDITION_TYPE_OR,
+    .conditions                    = sai_metadata_conditions_SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_TUNNEL_INDEX,
+    .conditionslength              = 1,
+    .isconditional                 = (1 != 0),
+    .validonlytype                 = SAI_ATTR_CONDITION_TYPE_NONE,
+    .validonly                     = NULL,
+    .validonlylength               = 0,
+    .isvalidonly                   = (0 != 0),
+    .getsave                       = false,
+    .isvlan                        = false,
+    .isaclfield                    = false,
+    .isaclaction                   = false,
+    .ismandatoryoncreate           = true,
+    .iscreateonly                  = true,
+    .iscreateandset                = false,
+    .isreadonly                    = false,
+    .iskey                         = false,
+    .isprimitive                   = true,
+    .notificationtype              = -1,
+    .capability                    = NULL,
+    .capabilitylength              = 0,
+    .isextensionattr               = false,
+};
 const sai_object_type_t sai_metadata_SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_NEXT_HOP_allowed_objects[] = {
     SAI_OBJECT_TYPE_NEXT_HOP,
     -1
@@ -45280,6 +45569,252 @@ const sai_attr_metadata_t sai_metadata_attr_SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_T
     .enummetadata                  = NULL,
     .conditiontype                 = SAI_ATTR_CONDITION_TYPE_OR,
     .conditions                    = sai_metadata_conditions_SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_TRAP_ID,
+    .conditionslength              = 1,
+    .isconditional                 = (1 != 0),
+    .validonlytype                 = SAI_ATTR_CONDITION_TYPE_NONE,
+    .validonly                     = NULL,
+    .validonlylength               = 0,
+    .isvalidonly                   = (0 != 0),
+    .getsave                       = false,
+    .isvlan                        = false,
+    .isaclfield                    = false,
+    .isaclaction                   = false,
+    .ismandatoryoncreate           = true,
+    .iscreateonly                  = true,
+    .iscreateandset                = false,
+    .isreadonly                    = false,
+    .iskey                         = false,
+    .isprimitive                   = true,
+    .notificationtype              = -1,
+    .capability                    = NULL,
+    .capabilitylength              = 0,
+    .isextensionattr               = false,
+};
+const sai_attr_metadata_t sai_metadata_attr_SAI_TABLE_L3_VXLAN_ENTRY_ATTR_ACTION = {
+    .objecttype                    = SAI_OBJECT_TYPE_TABLE_L3_VXLAN_ENTRY,
+    .attrid                        = SAI_TABLE_L3_VXLAN_ENTRY_ATTR_ACTION,
+    .attridname                    = "SAI_TABLE_L3_VXLAN_ENTRY_ATTR_ACTION",
+    .brief                         = "Action.",
+    .attrvaluetype                 = SAI_ATTR_VALUE_TYPE_INT32,
+    .flags                         = (sai_attr_flags_t)(SAI_ATTR_FLAGS_MANDATORY_ON_CREATE|SAI_ATTR_FLAGS_CREATE_ONLY),
+    .allowedobjecttypes            = NULL,
+    .allowedobjecttypeslength      = 0,
+    .allowrepetitiononlist         = false,
+    .allowmixedobjecttypes         = false,
+    .allowemptylist                = false,
+    .allownullobjectid             = false,
+    .isoidattribute                = (0 > 0),
+    .defaultvaluetype              = SAI_DEFAULT_VALUE_TYPE_NONE,
+    .defaultvalue                  = NULL,
+    .defaultvalueobjecttype        = SAI_OBJECT_TYPE_NULL,
+    .defaultvalueattrid            = SAI_INVALID_ATTRIBUTE_ID,
+    .storedefaultvalue             = false,
+    .isenum                        = true,
+    .isenumlist                    = false,
+    .enummetadata                  = &sai_metadata_enum_sai_table_l3_vxlan_entry_action_t,
+    .conditiontype                 = SAI_ATTR_CONDITION_TYPE_NONE,
+    .conditions                    = NULL,
+    .conditionslength              = 0,
+    .isconditional                 = (0 != 0),
+    .validonlytype                 = SAI_ATTR_CONDITION_TYPE_NONE,
+    .validonly                     = NULL,
+    .validonlylength               = 0,
+    .isvalidonly                   = (0 != 0),
+    .getsave                       = false,
+    .isvlan                        = false,
+    .isaclfield                    = false,
+    .isaclaction                   = false,
+    .ismandatoryoncreate           = true,
+    .iscreateonly                  = true,
+    .iscreateandset                = false,
+    .isreadonly                    = false,
+    .iskey                         = false,
+    .isprimitive                   = true,
+    .notificationtype              = -1,
+    .capability                    = NULL,
+    .capabilitylength              = 0,
+    .isextensionattr               = false,
+};
+const sai_attr_metadata_t sai_metadata_attr_SAI_TABLE_L3_VXLAN_ENTRY_ATTR_METADATA_KEY = {
+    .objecttype                    = SAI_OBJECT_TYPE_TABLE_L3_VXLAN_ENTRY,
+    .attrid                        = SAI_TABLE_L3_VXLAN_ENTRY_ATTR_METADATA_KEY,
+    .attridname                    = "SAI_TABLE_L3_VXLAN_ENTRY_ATTR_METADATA_KEY",
+    .brief                         = "Exact Matched key metadata.",
+    .attrvaluetype                 = SAI_ATTR_VALUE_TYPE_UINT16,
+    .flags                         = (sai_attr_flags_t)(SAI_ATTR_FLAGS_MANDATORY_ON_CREATE|SAI_ATTR_FLAGS_CREATE_ONLY),
+    .allowedobjecttypes            = NULL,
+    .allowedobjecttypeslength      = 0,
+    .allowrepetitiononlist         = false,
+    .allowmixedobjecttypes         = false,
+    .allowemptylist                = false,
+    .allownullobjectid             = false,
+    .isoidattribute                = (0 > 0),
+    .defaultvaluetype              = SAI_DEFAULT_VALUE_TYPE_NONE,
+    .defaultvalue                  = NULL,
+    .defaultvalueobjecttype        = SAI_OBJECT_TYPE_NULL,
+    .defaultvalueattrid            = SAI_INVALID_ATTRIBUTE_ID,
+    .storedefaultvalue             = false,
+    .isenum                        = false,
+    .isenumlist                    = false,
+    .enummetadata                  = NULL,
+    .conditiontype                 = SAI_ATTR_CONDITION_TYPE_NONE,
+    .conditions                    = NULL,
+    .conditionslength              = 0,
+    .isconditional                 = (0 != 0),
+    .validonlytype                 = SAI_ATTR_CONDITION_TYPE_NONE,
+    .validonly                     = NULL,
+    .validonlylength               = 0,
+    .isvalidonly                   = (0 != 0),
+    .getsave                       = false,
+    .isvlan                        = false,
+    .isaclfield                    = false,
+    .isaclaction                   = false,
+    .ismandatoryoncreate           = true,
+    .iscreateonly                  = true,
+    .iscreateandset                = false,
+    .isreadonly                    = false,
+    .iskey                         = false,
+    .isprimitive                   = true,
+    .notificationtype              = -1,
+    .capability                    = NULL,
+    .capabilitylength              = 0,
+    .isextensionattr               = false,
+};
+const sai_attribute_value_t sai_metadata_SAI_TABLE_L3_VXLAN_ENTRY_ATTR_IS_DEFAULT_default_value = { .booldata = false };
+const sai_attr_metadata_t sai_metadata_attr_SAI_TABLE_L3_VXLAN_ENTRY_ATTR_IS_DEFAULT = {
+    .objecttype                    = SAI_OBJECT_TYPE_TABLE_L3_VXLAN_ENTRY,
+    .attrid                        = SAI_TABLE_L3_VXLAN_ENTRY_ATTR_IS_DEFAULT,
+    .attridname                    = "SAI_TABLE_L3_VXLAN_ENTRY_ATTR_IS_DEFAULT",
+    .brief                         = "Is default entry.",
+    .attrvaluetype                 = SAI_ATTR_VALUE_TYPE_BOOL,
+    .flags                         = (sai_attr_flags_t)(SAI_ATTR_FLAGS_CREATE_ONLY),
+    .allowedobjecttypes            = NULL,
+    .allowedobjecttypeslength      = 0,
+    .allowrepetitiononlist         = false,
+    .allowmixedobjecttypes         = false,
+    .allowemptylist                = false,
+    .allownullobjectid             = false,
+    .isoidattribute                = (0 > 0),
+    .defaultvaluetype              = SAI_DEFAULT_VALUE_TYPE_CONST,
+    .defaultvalue                  = &sai_metadata_SAI_TABLE_L3_VXLAN_ENTRY_ATTR_IS_DEFAULT_default_value,
+    .defaultvalueobjecttype        = SAI_OBJECT_TYPE_NULL,
+    .defaultvalueattrid            = SAI_INVALID_ATTRIBUTE_ID,
+    .storedefaultvalue             = false,
+    .isenum                        = false,
+    .isenumlist                    = false,
+    .enummetadata                  = NULL,
+    .conditiontype                 = SAI_ATTR_CONDITION_TYPE_NONE,
+    .conditions                    = NULL,
+    .conditionslength              = 0,
+    .isconditional                 = (0 != 0),
+    .validonlytype                 = SAI_ATTR_CONDITION_TYPE_NONE,
+    .validonly                     = NULL,
+    .validonlylength               = 0,
+    .isvalidonly                   = (0 != 0),
+    .getsave                       = false,
+    .isvlan                        = false,
+    .isaclfield                    = false,
+    .isaclaction                   = false,
+    .ismandatoryoncreate           = false,
+    .iscreateonly                  = true,
+    .iscreateandset                = false,
+    .isreadonly                    = false,
+    .iskey                         = false,
+    .isprimitive                   = true,
+    .notificationtype              = -1,
+    .capability                    = NULL,
+    .capabilitylength              = 0,
+    .isextensionattr               = false,
+};
+const sai_object_type_t sai_metadata_SAI_TABLE_L3_VXLAN_ENTRY_ATTR_TUNNEL_ID_allowed_objects[] = {
+    SAI_OBJECT_TYPE_TUNNEL,
+    -1
+};
+const sai_attr_condition_t sai_metadata_condition_SAI_TABLE_L3_VXLAN_ENTRY_ATTR_TUNNEL_ID_0 = {
+        .attrid = SAI_TABLE_L3_VXLAN_ENTRY_ATTR_ACTION,
+        .condition = { .s32 = SAI_TABLE_L3_VXLAN_ENTRY_ACTION_TUNNEL_ENCAP }
+};
+const sai_attr_condition_t* const sai_metadata_conditions_SAI_TABLE_L3_VXLAN_ENTRY_ATTR_TUNNEL_ID[] = {
+    &sai_metadata_condition_SAI_TABLE_L3_VXLAN_ENTRY_ATTR_TUNNEL_ID_0,
+    NULL
+};
+const sai_attr_metadata_t sai_metadata_attr_SAI_TABLE_L3_VXLAN_ENTRY_ATTR_TUNNEL_ID = {
+    .objecttype                    = SAI_OBJECT_TYPE_TABLE_L3_VXLAN_ENTRY,
+    .attrid                        = SAI_TABLE_L3_VXLAN_ENTRY_ATTR_TUNNEL_ID,
+    .attridname                    = "SAI_TABLE_L3_VXLAN_ENTRY_ATTR_TUNNEL_ID",
+    .brief                         = "Action tunnel_encap parameter tunnel_id.",
+    .attrvaluetype                 = SAI_ATTR_VALUE_TYPE_OBJECT_ID,
+    .flags                         = (sai_attr_flags_t)(SAI_ATTR_FLAGS_MANDATORY_ON_CREATE|SAI_ATTR_FLAGS_CREATE_ONLY),
+    .allowedobjecttypes            = sai_metadata_SAI_TABLE_L3_VXLAN_ENTRY_ATTR_TUNNEL_ID_allowed_objects,
+    .allowedobjecttypeslength      = 1,
+    .allowrepetitiononlist         = false,
+    .allowmixedobjecttypes         = false,
+    .allowemptylist                = false,
+    .allownullobjectid             = false,
+    .isoidattribute                = (1 > 0),
+    .defaultvaluetype              = SAI_DEFAULT_VALUE_TYPE_NONE,
+    .defaultvalue                  = NULL,
+    .defaultvalueobjecttype        = SAI_OBJECT_TYPE_NULL,
+    .defaultvalueattrid            = SAI_INVALID_ATTRIBUTE_ID,
+    .storedefaultvalue             = false,
+    .isenum                        = false,
+    .isenumlist                    = false,
+    .enummetadata                  = NULL,
+    .conditiontype                 = SAI_ATTR_CONDITION_TYPE_OR,
+    .conditions                    = sai_metadata_conditions_SAI_TABLE_L3_VXLAN_ENTRY_ATTR_TUNNEL_ID,
+    .conditionslength              = 1,
+    .isconditional                 = (1 != 0),
+    .validonlytype                 = SAI_ATTR_CONDITION_TYPE_NONE,
+    .validonly                     = NULL,
+    .validonlylength               = 0,
+    .isvalidonly                   = (0 != 0),
+    .getsave                       = false,
+    .isvlan                        = false,
+    .isaclfield                    = false,
+    .isaclaction                   = false,
+    .ismandatoryoncreate           = true,
+    .iscreateonly                  = true,
+    .iscreateandset                = false,
+    .isreadonly                    = false,
+    .iskey                         = false,
+    .isprimitive                   = true,
+    .notificationtype              = -1,
+    .capability                    = NULL,
+    .capabilitylength              = 0,
+    .isextensionattr               = false,
+};
+const sai_attr_condition_t sai_metadata_condition_SAI_TABLE_L3_VXLAN_ENTRY_ATTR_UNDERLAY_DIP_0 = {
+        .attrid = SAI_TABLE_L3_VXLAN_ENTRY_ATTR_ACTION,
+        .condition = { .s32 = SAI_TABLE_L3_VXLAN_ENTRY_ACTION_TUNNEL_ENCAP }
+};
+const sai_attr_condition_t* const sai_metadata_conditions_SAI_TABLE_L3_VXLAN_ENTRY_ATTR_UNDERLAY_DIP[] = {
+    &sai_metadata_condition_SAI_TABLE_L3_VXLAN_ENTRY_ATTR_UNDERLAY_DIP_0,
+    NULL
+};
+const sai_attr_metadata_t sai_metadata_attr_SAI_TABLE_L3_VXLAN_ENTRY_ATTR_UNDERLAY_DIP = {
+    .objecttype                    = SAI_OBJECT_TYPE_TABLE_L3_VXLAN_ENTRY,
+    .attrid                        = SAI_TABLE_L3_VXLAN_ENTRY_ATTR_UNDERLAY_DIP,
+    .attridname                    = "SAI_TABLE_L3_VXLAN_ENTRY_ATTR_UNDERLAY_DIP",
+    .brief                         = "Action tunnel_encap parameter underlay_dip.",
+    .attrvaluetype                 = SAI_ATTR_VALUE_TYPE_IP_ADDRESS,
+    .flags                         = (sai_attr_flags_t)(SAI_ATTR_FLAGS_MANDATORY_ON_CREATE|SAI_ATTR_FLAGS_CREATE_ONLY),
+    .allowedobjecttypes            = NULL,
+    .allowedobjecttypeslength      = 0,
+    .allowrepetitiononlist         = false,
+    .allowmixedobjecttypes         = false,
+    .allowemptylist                = false,
+    .allownullobjectid             = false,
+    .isoidattribute                = (0 > 0),
+    .defaultvaluetype              = SAI_DEFAULT_VALUE_TYPE_NONE,
+    .defaultvalue                  = NULL,
+    .defaultvalueobjecttype        = SAI_OBJECT_TYPE_NULL,
+    .defaultvalueattrid            = SAI_INVALID_ATTRIBUTE_ID,
+    .storedefaultvalue             = false,
+    .isenum                        = false,
+    .isenumlist                    = false,
+    .enummetadata                  = NULL,
+    .conditiontype                 = SAI_ATTR_CONDITION_TYPE_OR,
+    .conditions                    = sai_metadata_conditions_SAI_TABLE_L3_VXLAN_ENTRY_ATTR_UNDERLAY_DIP,
     .conditionslength              = 1,
     .isconditional                 = (1 != 0),
     .validonlytype                 = SAI_ATTR_CONDITION_TYPE_NONE,
@@ -52741,6 +53276,9 @@ const sai_attr_metadata_t* const sai_metadata_object_type_sai_port_attr_t[] = {
     &sai_metadata_attr_SAI_PORT_ATTR_PORT_POOL_LIST,
     &sai_metadata_attr_SAI_PORT_ATTR_ISOLATION_GROUP,
     &sai_metadata_attr_SAI_PORT_ATTR_PKT_TX_ENABLE,
+    &sai_metadata_attr_SAI_PORT_ATTR_SERDES_PREEMPHASIS,
+    &sai_metadata_attr_SAI_PORT_ATTR_SERDES_IDRIVER,
+    &sai_metadata_attr_SAI_PORT_ATTR_SERDES_IPREDRIVER,
     NULL
 };
 const sai_attr_metadata_t* const sai_metadata_object_type_sai_lag_attr_t[] = {
@@ -53781,9 +54319,18 @@ const sai_attr_metadata_t* const sai_metadata_object_type_sai_table_bitmap_route
     &sai_metadata_attr_SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_IN_RIF_METADATA_KEY,
     &sai_metadata_attr_SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_IN_RIF_METADATA_MASK,
     &sai_metadata_attr_SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_DST_IP_KEY,
+    &sai_metadata_attr_SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_TUNNEL_INDEX,
     &sai_metadata_attr_SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_NEXT_HOP,
     &sai_metadata_attr_SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_ROUTER_INTERFACE,
     &sai_metadata_attr_SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_TRAP_ID,
+    NULL
+};
+const sai_attr_metadata_t* const sai_metadata_object_type_sai_table_l3_vxlan_entry_attr_t[] = {
+    &sai_metadata_attr_SAI_TABLE_L3_VXLAN_ENTRY_ATTR_ACTION,
+    &sai_metadata_attr_SAI_TABLE_L3_VXLAN_ENTRY_ATTR_METADATA_KEY,
+    &sai_metadata_attr_SAI_TABLE_L3_VXLAN_ENTRY_ATTR_IS_DEFAULT,
+    &sai_metadata_attr_SAI_TABLE_L3_VXLAN_ENTRY_ATTR_TUNNEL_ID,
+    &sai_metadata_attr_SAI_TABLE_L3_VXLAN_ENTRY_ATTR_UNDERLAY_DIP,
     NULL
 };
 const sai_attr_metadata_t* const* const sai_metadata_attr_by_object_type[] = {
@@ -53867,9 +54414,10 @@ const sai_attr_metadata_t* const* const sai_metadata_attr_by_object_type[] = {
     sai_metadata_object_type_sai_isolation_group_member_attr_t,
     sai_metadata_object_type_sai_table_bitmap_classification_entry_attr_t,
     sai_metadata_object_type_sai_table_bitmap_router_entry_attr_t,
+    sai_metadata_object_type_sai_table_l3_vxlan_entry_attr_t,
     NULL
 };
-const size_t sai_metadata_attr_by_object_type_count = 80;
+const size_t sai_metadata_attr_by_object_type_count = 81;
 
 /* Define SAI_OBJECT_TYPE_EXTENSIONS_MAX */
 
@@ -54375,6 +54923,16 @@ const char* sai_metadata_get_table_bitmap_router_entry_stat_name(
     _In_ sai_table_bitmap_router_entry_stat_t value)
 {
     return sai_metadata_get_enum_value_name(&sai_metadata_enum_sai_table_bitmap_router_entry_stat_t, value);
+}
+const char* sai_metadata_get_table_l3_vxlan_entry_action_name(
+    _In_ sai_table_l3_vxlan_entry_action_t value)
+{
+    return sai_metadata_get_enum_value_name(&sai_metadata_enum_sai_table_l3_vxlan_entry_action_t, value);
+}
+const char* sai_metadata_get_table_l3_vxlan_entry_stat_name(
+    _In_ sai_table_l3_vxlan_entry_stat_t value)
+{
+    return sai_metadata_get_enum_value_name(&sai_metadata_enum_sai_table_l3_vxlan_entry_stat_t, value);
 }
 const char* sai_metadata_get_tam_microburst_stat_name(
     _In_ sai_tam_microburst_stat_t value)
@@ -55744,7 +56302,7 @@ const sai_object_type_info_t sai_metadata_object_type_info_SAI_OBJECT_TYPE_PORT 
     .attridend            = SAI_PORT_ATTR_END,
     .enummetadata         = &sai_metadata_enum_sai_port_attr_t,
     .attrmetadata         = sai_metadata_object_type_sai_port_attr_t,
-    .attrmetadatalength   = 87,
+    .attrmetadatalength   = 90,
     .isnonobjectid        = false,
     .isobjectid           = !false,
     .structmembers        = NULL,
@@ -59057,6 +59615,12 @@ const sai_rev_graph_member_t sai_metadata_SAI_OBJECT_TYPE_TUNNEL_rev_graph_membe
 };
 const sai_rev_graph_member_t sai_metadata_SAI_OBJECT_TYPE_TUNNEL_rev_graph_member_4 = {
     .objecttype          = SAI_OBJECT_TYPE_TUNNEL,
+    .depobjecttype       = SAI_OBJECT_TYPE_TABLE_L3_VXLAN_ENTRY,
+    .attrmetadata        = &sai_metadata_attr_SAI_TABLE_L3_VXLAN_ENTRY_ATTR_TUNNEL_ID,
+    .structmember        = NULL,
+};
+const sai_rev_graph_member_t sai_metadata_SAI_OBJECT_TYPE_TUNNEL_rev_graph_member_5 = {
+    .objecttype          = SAI_OBJECT_TYPE_TUNNEL,
     .depobjecttype       = SAI_OBJECT_TYPE_TUNNEL_TERM_TABLE_ENTRY,
     .attrmetadata        = &sai_metadata_attr_SAI_TUNNEL_TERM_TABLE_ENTRY_ATTR_ACTION_TUNNEL_ID,
     .structmember        = NULL,
@@ -59067,6 +59631,7 @@ const sai_rev_graph_member_t* const sai_metadata_SAI_OBJECT_TYPE_TUNNEL_rev_grap
     &sai_metadata_SAI_OBJECT_TYPE_TUNNEL_rev_graph_member_2,
     &sai_metadata_SAI_OBJECT_TYPE_TUNNEL_rev_graph_member_3,
     &sai_metadata_SAI_OBJECT_TYPE_TUNNEL_rev_graph_member_4,
+    &sai_metadata_SAI_OBJECT_TYPE_TUNNEL_rev_graph_member_5,
     NULL
 };
 sai_status_t sai_metadata_generic_create_SAI_OBJECT_TYPE_TUNNEL(
@@ -59108,7 +59673,7 @@ const sai_object_type_info_t sai_metadata_object_type_info_SAI_OBJECT_TYPE_TUNNE
     .structmembers        = NULL,
     .structmemberscount   = 0,
     .revgraphmembers      = sai_metadata_SAI_OBJECT_TYPE_TUNNEL_rev_graph_members,
-    .revgraphmemberscount = 5,
+    .revgraphmemberscount = 6,
     .create               = sai_metadata_generic_create_SAI_OBJECT_TYPE_TUNNEL,
     .remove               = sai_metadata_generic_remove_SAI_OBJECT_TYPE_TUNNEL,
     .set                  = sai_metadata_generic_set_SAI_OBJECT_TYPE_TUNNEL,
@@ -61469,7 +62034,7 @@ const sai_object_type_info_t sai_metadata_object_type_info_SAI_OBJECT_TYPE_TABLE
     .attridend            = SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_END,
     .enummetadata         = &sai_metadata_enum_sai_table_bitmap_router_entry_attr_t,
     .attrmetadata         = sai_metadata_object_type_sai_table_bitmap_router_entry_attr_t,
-    .attrmetadatalength   = 8,
+    .attrmetadatalength   = 9,
     .isnonobjectid        = false,
     .isobjectid           = !false,
     .structmembers        = NULL,
@@ -61482,6 +62047,53 @@ const sai_object_type_info_t sai_metadata_object_type_info_SAI_OBJECT_TYPE_TABLE
     .get                  = sai_metadata_generic_get_SAI_OBJECT_TYPE_TABLE_BITMAP_ROUTER_ENTRY,
     .isexperimental       = true,
     .statenum             = &sai_metadata_enum_sai_table_bitmap_router_entry_stat_t,
+};
+sai_status_t sai_metadata_generic_create_SAI_OBJECT_TYPE_TABLE_L3_VXLAN_ENTRY(
+    _Inout_ sai_object_meta_key_t *meta_key,
+    _In_ sai_object_id_t switch_id,
+    _In_ uint32_t attr_count,
+    _In_ const sai_attribute_t *attr_list)
+{
+    return sai_metadata_sai_bmtor_api->create_table_l3_vxlan_entry(&meta_key->objectkey.key.object_id, switch_id, attr_count, attr_list);
+}
+sai_status_t sai_metadata_generic_remove_SAI_OBJECT_TYPE_TABLE_L3_VXLAN_ENTRY(
+    _In_ const sai_object_meta_key_t *meta_key)
+{
+    return sai_metadata_sai_bmtor_api->remove_table_l3_vxlan_entry(meta_key->objectkey.key.object_id);
+}
+sai_status_t sai_metadata_generic_set_SAI_OBJECT_TYPE_TABLE_L3_VXLAN_ENTRY(
+    _In_ const sai_object_meta_key_t *meta_key,
+    _In_ const sai_attribute_t *attr)
+{
+    return sai_metadata_sai_bmtor_api->set_table_l3_vxlan_entry_attribute(meta_key->objectkey.key.object_id, attr);
+}
+sai_status_t sai_metadata_generic_get_SAI_OBJECT_TYPE_TABLE_L3_VXLAN_ENTRY(
+    _In_ const sai_object_meta_key_t *meta_key,
+    _In_ uint32_t attr_count,
+    _Inout_ sai_attribute_t *attr_list)
+{
+    return sai_metadata_sai_bmtor_api->get_table_l3_vxlan_entry_attribute(meta_key->objectkey.key.object_id, attr_count, attr_list);
+}
+const sai_object_type_info_t sai_metadata_object_type_info_SAI_OBJECT_TYPE_TABLE_L3_VXLAN_ENTRY = {
+    .objecttype           = SAI_OBJECT_TYPE_TABLE_L3_VXLAN_ENTRY,
+    .objecttypename       = "SAI_OBJECT_TYPE_TABLE_L3_VXLAN_ENTRY",
+    .attridstart          = SAI_TABLE_L3_VXLAN_ENTRY_ATTR_START,
+    .attridend            = SAI_TABLE_L3_VXLAN_ENTRY_ATTR_END,
+    .enummetadata         = &sai_metadata_enum_sai_table_l3_vxlan_entry_attr_t,
+    .attrmetadata         = sai_metadata_object_type_sai_table_l3_vxlan_entry_attr_t,
+    .attrmetadatalength   = 5,
+    .isnonobjectid        = false,
+    .isobjectid           = !false,
+    .structmembers        = NULL,
+    .structmemberscount   = 0,
+    .revgraphmembers      = NULL,
+    .revgraphmemberscount = 0,
+    .create               = sai_metadata_generic_create_SAI_OBJECT_TYPE_TABLE_L3_VXLAN_ENTRY,
+    .remove               = sai_metadata_generic_remove_SAI_OBJECT_TYPE_TABLE_L3_VXLAN_ENTRY,
+    .set                  = sai_metadata_generic_set_SAI_OBJECT_TYPE_TABLE_L3_VXLAN_ENTRY,
+    .get                  = sai_metadata_generic_get_SAI_OBJECT_TYPE_TABLE_L3_VXLAN_ENTRY,
+    .isexperimental       = true,
+    .statenum             = &sai_metadata_enum_sai_table_l3_vxlan_entry_stat_t,
 };
 
 /* Object infos table */
@@ -61567,6 +62179,7 @@ const sai_object_type_info_t* const sai_metadata_all_object_type_infos[] = {
     &sai_metadata_object_type_info_SAI_OBJECT_TYPE_ISOLATION_GROUP_MEMBER,
     &sai_metadata_object_type_info_SAI_OBJECT_TYPE_TABLE_BITMAP_CLASSIFICATION_ENTRY,
     &sai_metadata_object_type_info_SAI_OBJECT_TYPE_TABLE_BITMAP_ROUTER_ENTRY,
+    &sai_metadata_object_type_info_SAI_OBJECT_TYPE_TABLE_L3_VXLAN_ENTRY,
     NULL
 };
 
@@ -62090,6 +62703,9 @@ const sai_attr_metadata_t* const sai_metadata_attr_sorted_by_id_name[] = {
     &sai_metadata_attr_SAI_PORT_ATTR_REMOTE_ADVERTISED_MEDIA_TYPE,
     &sai_metadata_attr_SAI_PORT_ATTR_REMOTE_ADVERTISED_OUI_CODE,
     &sai_metadata_attr_SAI_PORT_ATTR_REMOTE_ADVERTISED_SPEED,
+    &sai_metadata_attr_SAI_PORT_ATTR_SERDES_IDRIVER,
+    &sai_metadata_attr_SAI_PORT_ATTR_SERDES_IPREDRIVER,
+    &sai_metadata_attr_SAI_PORT_ATTR_SERDES_PREEMPHASIS,
     &sai_metadata_attr_SAI_PORT_ATTR_SPEED,
     &sai_metadata_attr_SAI_PORT_ATTR_SUPPORTED_ASYMMETRIC_PAUSE_MODE,
     &sai_metadata_attr_SAI_PORT_ATTR_SUPPORTED_AUTO_NEG_MODE,
@@ -62326,6 +62942,12 @@ const sai_attr_metadata_t* const sai_metadata_attr_sorted_by_id_name[] = {
     &sai_metadata_attr_SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_PRIORITY,
     &sai_metadata_attr_SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_ROUTER_INTERFACE,
     &sai_metadata_attr_SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_TRAP_ID,
+    &sai_metadata_attr_SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_TUNNEL_INDEX,
+    &sai_metadata_attr_SAI_TABLE_L3_VXLAN_ENTRY_ATTR_ACTION,
+    &sai_metadata_attr_SAI_TABLE_L3_VXLAN_ENTRY_ATTR_IS_DEFAULT,
+    &sai_metadata_attr_SAI_TABLE_L3_VXLAN_ENTRY_ATTR_METADATA_KEY,
+    &sai_metadata_attr_SAI_TABLE_L3_VXLAN_ENTRY_ATTR_TUNNEL_ID,
+    &sai_metadata_attr_SAI_TABLE_L3_VXLAN_ENTRY_ATTR_UNDERLAY_DIP,
     &sai_metadata_attr_SAI_TAM_ATTR_BUFFER_REPORTING_MODE,
     &sai_metadata_attr_SAI_TAM_ATTR_BUFFER_TRACKING_ADMIN_STATE,
     &sai_metadata_attr_SAI_TAM_ATTR_BUFFER_TRACKING_MODE,
@@ -62471,7 +63093,7 @@ const sai_attr_metadata_t* const sai_metadata_attr_sorted_by_id_name[] = {
     &sai_metadata_attr_SAI_WRED_ATTR_YELLOW_MIN_THRESHOLD,
     NULL
 };
-const size_t sai_metadata_attr_sorted_by_id_name_count = 896;
+const size_t sai_metadata_attr_sorted_by_id_name_count = 905;
 
 /* SAI notifications struct */
 
@@ -63162,6 +63784,18 @@ int sai_serialize_table_bitmap_router_entry_stat(
     _In_ sai_table_bitmap_router_entry_stat_t table_bitmap_router_entry_stat)
 {
     return sai_serialize_enum(buffer, &sai_metadata_enum_sai_table_bitmap_router_entry_stat_t, table_bitmap_router_entry_stat);
+}
+int sai_serialize_table_l3_vxlan_entry_action(
+    _Out_ char *buffer,
+    _In_ sai_table_l3_vxlan_entry_action_t table_l3_vxlan_entry_action)
+{
+    return sai_serialize_enum(buffer, &sai_metadata_enum_sai_table_l3_vxlan_entry_action_t, table_l3_vxlan_entry_action);
+}
+int sai_serialize_table_l3_vxlan_entry_stat(
+    _Out_ char *buffer,
+    _In_ sai_table_l3_vxlan_entry_stat_t table_l3_vxlan_entry_stat)
+{
+    return sai_serialize_enum(buffer, &sai_metadata_enum_sai_table_l3_vxlan_entry_stat_t, table_l3_vxlan_entry_stat);
 }
 int sai_serialize_tam_microburst_stat(
     _Out_ char *buffer,
@@ -66328,6 +66962,18 @@ int sai_deserialize_table_bitmap_router_entry_stat(
     _Out_ sai_table_bitmap_router_entry_stat_t *table_bitmap_router_entry_stat)
 {
     return sai_deserialize_enum(buffer, &sai_metadata_enum_sai_table_bitmap_router_entry_stat_t, (int*)table_bitmap_router_entry_stat);
+}
+int sai_deserialize_table_l3_vxlan_entry_action(
+    _In_ const char *buffer,
+    _Out_ sai_table_l3_vxlan_entry_action_t *table_l3_vxlan_entry_action)
+{
+    return sai_deserialize_enum(buffer, &sai_metadata_enum_sai_table_l3_vxlan_entry_action_t, (int*)table_l3_vxlan_entry_action);
+}
+int sai_deserialize_table_l3_vxlan_entry_stat(
+    _In_ const char *buffer,
+    _Out_ sai_table_l3_vxlan_entry_stat_t *table_l3_vxlan_entry_stat)
+{
+    return sai_deserialize_enum(buffer, &sai_metadata_enum_sai_table_l3_vxlan_entry_stat_t, (int*)table_l3_vxlan_entry_stat);
 }
 int sai_deserialize_tam_microburst_stat(
     _In_ const char *buffer,

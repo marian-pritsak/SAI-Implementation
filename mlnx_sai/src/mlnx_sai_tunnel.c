@@ -36,7 +36,7 @@ static sai_status_t mlnx_convert_sai_tunnel_type_to_sx_ipv6(_In_ sai_tunnel_type
                                                             _Out_ sx_tunnel_type_e   *sx_type);
 static sai_status_t mlnx_convert_sx_tunnel_type_to_sai(_In_ sx_tunnel_type_e    sx_tunnel_attr,
                                                        _Out_ sai_tunnel_type_t *sai_type);
-static sai_status_t mlnx_sai_tunnel_to_sx_tunnel_id(_In_ sai_object_id_t  sai_tunnel_id,
+sai_status_t mlnx_sai_tunnel_to_sx_tunnel_id(_In_ sai_object_id_t  sai_tunnel_id,
                                                     _Out_ sx_tunnel_id_t *sx_tunnel_id);
 static sai_status_t mlnx_sai_get_sai_rif_id(_In_ sai_object_id_t        sai_tunnel_id,
                                             _In_ tunnel_rif_type        sai_tunnel_rif_type,
@@ -2592,7 +2592,7 @@ cleanup:
 /*
  *  Callers need to lock around this method
  */
-static sai_status_t mlnx_sai_tunnel_to_sx_tunnel_id(_In_ sai_object_id_t  sai_tunnel_id,
+sai_status_t mlnx_sai_tunnel_to_sx_tunnel_id(_In_ sai_object_id_t  sai_tunnel_id,
                                                     _Out_ sx_tunnel_id_t *sx_tunnel_id)
 {
     sai_status_t sai_status;

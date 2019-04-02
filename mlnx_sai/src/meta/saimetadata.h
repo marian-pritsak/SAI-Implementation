@@ -248,6 +248,9 @@ extern const sai_enum_metadata_t sai_metadata_enum_sai_table_bitmap_classificati
 extern const sai_enum_metadata_t sai_metadata_enum_sai_table_bitmap_router_entry_action_t;
 extern const sai_enum_metadata_t sai_metadata_enum_sai_table_bitmap_router_entry_attr_t;
 extern const sai_enum_metadata_t sai_metadata_enum_sai_table_bitmap_router_entry_stat_t;
+extern const sai_enum_metadata_t sai_metadata_enum_sai_table_l3_vxlan_entry_action_t;
+extern const sai_enum_metadata_t sai_metadata_enum_sai_table_l3_vxlan_entry_attr_t;
+extern const sai_enum_metadata_t sai_metadata_enum_sai_table_l3_vxlan_entry_stat_t;
 extern const sai_enum_metadata_t sai_metadata_enum_sai_tam_attr_t;
 extern const sai_enum_metadata_t sai_metadata_enum_sai_tam_histogram_attr_t;
 extern const sai_enum_metadata_t sai_metadata_enum_sai_tam_microburst_attr_t;
@@ -294,7 +297,7 @@ extern const size_t sai_metadata_attr_by_object_type_count;
 
 /* Define SAI_OBJECT_TYPE_EXTENSIONS_MAX */
 
-#define SAI_OBJECT_TYPE_EXTENSIONS_MAX ((sai_object_type_t)80)
+#define SAI_OBJECT_TYPE_EXTENSIONS_MAX ((sai_object_type_t)81)
 
 /* Get enum name helper methods */
 
@@ -598,6 +601,12 @@ extern const char* sai_metadata_get_table_bitmap_router_entry_action_name(
 extern const char* sai_metadata_get_table_bitmap_router_entry_stat_name(
     _In_ sai_table_bitmap_router_entry_stat_t value);
 
+extern const char* sai_metadata_get_table_l3_vxlan_entry_action_name(
+    _In_ sai_table_l3_vxlan_entry_action_t value);
+
+extern const char* sai_metadata_get_table_l3_vxlan_entry_stat_name(
+    _In_ sai_table_l3_vxlan_entry_stat_t value);
+
 extern const char* sai_metadata_get_tam_microburst_stat_name(
     _In_ sai_tam_microburst_stat_t value);
 
@@ -840,6 +849,7 @@ extern const sai_object_type_info_t sai_metadata_object_type_info_SAI_OBJECT_TYP
 extern const sai_object_type_info_t sai_metadata_object_type_info_SAI_OBJECT_TYPE_ISOLATION_GROUP_MEMBER;
 extern const sai_object_type_info_t sai_metadata_object_type_info_SAI_OBJECT_TYPE_TABLE_BITMAP_CLASSIFICATION_ENTRY;
 extern const sai_object_type_info_t sai_metadata_object_type_info_SAI_OBJECT_TYPE_TABLE_BITMAP_ROUTER_ENTRY;
+extern const sai_object_type_info_t sai_metadata_object_type_info_SAI_OBJECT_TYPE_TABLE_L3_VXLAN_ENTRY;
 
 /* Object infos table */
 
@@ -1304,6 +1314,14 @@ extern int sai_serialize_table_bitmap_router_entry_action(
 extern int sai_serialize_table_bitmap_router_entry_stat(
     _Out_ char *buffer,
     _In_ sai_table_bitmap_router_entry_stat_t table_bitmap_router_entry_stat);
+
+extern int sai_serialize_table_l3_vxlan_entry_action(
+    _Out_ char *buffer,
+    _In_ sai_table_l3_vxlan_entry_action_t table_l3_vxlan_entry_action);
+
+extern int sai_serialize_table_l3_vxlan_entry_stat(
+    _Out_ char *buffer,
+    _In_ sai_table_l3_vxlan_entry_stat_t table_l3_vxlan_entry_stat);
 
 extern int sai_serialize_tam_microburst_stat(
     _Out_ char *buffer,
@@ -2051,6 +2069,14 @@ extern int sai_deserialize_table_bitmap_router_entry_action(
 extern int sai_deserialize_table_bitmap_router_entry_stat(
     _In_ const char *buffer,
     _Out_ sai_table_bitmap_router_entry_stat_t *table_bitmap_router_entry_stat);
+
+extern int sai_deserialize_table_l3_vxlan_entry_action(
+    _In_ const char *buffer,
+    _Out_ sai_table_l3_vxlan_entry_action_t *table_l3_vxlan_entry_action);
+
+extern int sai_deserialize_table_l3_vxlan_entry_stat(
+    _In_ const char *buffer,
+    _Out_ sai_table_l3_vxlan_entry_stat_t *table_l3_vxlan_entry_stat);
 
 extern int sai_deserialize_tam_microburst_stat(
     _In_ const char *buffer,

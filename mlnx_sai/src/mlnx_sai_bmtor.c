@@ -196,10 +196,11 @@ sai_status_t mlnx_create_table_bitmap_classification_entry(_Out_ sai_object_id_t
     bitmap_classification_param_list.len    = params_idx;
     bitmap_classification_key_list.keys     = bitmap_classification_keys;
     bitmap_classification_param_list.params = bitmap_classification_params;
+    SX_LOG_ERR("marianp Before insertion of bitmap_classification entry %u\n", flextrum_action);
     if (fx_table_entry_add(g_fx_handle, CONTROL_IN_RIF_TABLE_BITMAP_CLASSIFICATION_ID, flextrum_action,
                            bitmap_classification_key_list, bitmap_classification_param_list,
                            &bitmap_classification_priority)) {
-        SX_LOG_ERR("Failure in insertion of bitmap_classification entry\n");
+        SX_LOG_ERR("marianp Failure in insertion of bitmap_classification entry %u\n", flextrum_action);
         return SAI_STATUS_FAILURE;
     }
     if (SAI_STATUS_SUCCESS !=
@@ -257,42 +258,26 @@ sai_status_t mlnx_get_table_bitmap_classification_entry_attribute(_In_ sai_objec
     return SAI_STATUS_NOT_IMPLEMENTED;
 }
 
-static sai_status_t get_bitmap_router_fx_action(_In_ sai_table_bitmap_router_entry_action_t action,
-                                                _Out_ fx_action_id_t                       *action_id,
-                                                _In_ uint32_t                               param_index)
+fx_action_id_t get_bitmap_router_fx_action(
+    _In_ sai_table_bitmap_router_entry_action_t action)
 {
-    if (NULL == action_id) {
-        SX_LOG_ERR("NULL action id value\n");
-        return SAI_STATUS_INVALID_PARAMETER;
+    switch (action)
+    {
+        case SAI_TABLE_BITMAP_ROUTER_ENTRY_ACTION_TO_NEXTHOP:
+            return CONTROL_IN_RIF_TO_NEXTHOP_ID;
+        case SAI_TABLE_BITMAP_ROUTER_ENTRY_ACTION_TO_LOCAL:
+            return CONTROL_IN_RIF_TO_LOCAL_ID;
+        case SAI_TABLE_BITMAP_ROUTER_ENTRY_ACTION_TO_CPU:
+            return CONTROL_IN_RIF_TO_CPU_ID;
+        case SAI_TABLE_BITMAP_ROUTER_ENTRY_ACTION_DROP:
+            return CONTROL_IN_RIF_DROP_ID;
+        case SAI_TABLE_BITMAP_ROUTER_ENTRY_ACTION_NOACTION:
+            return NOACTION_ID;
+        default:
+            return -1;
     }
 
-    switch (action) {
-    case SAI_TABLE_BITMAP_ROUTER_ENTRY_ACTION_TO_NEXTHOP:
-        *action_id = CONTROL_IN_RIF_TO_NEXTHOP_ID;
-        break;
-
-    case SAI_TABLE_BITMAP_ROUTER_ENTRY_ACTION_TO_LOCAL:
-        *action_id = CONTROL_IN_RIF_TO_LOCAL_ID;
-        break;
-
-    case SAI_TABLE_BITMAP_ROUTER_ENTRY_ACTION_TO_CPU:
-        *action_id = CONTROL_IN_RIF_TO_CPU_ID;
-        break;
-
-    case SAI_TABLE_BITMAP_ROUTER_ENTRY_ACTION_DROP:
-        *action_id = CONTROL_IN_RIF_DROP_ID;
-        break;
-
-    case SAI_TABLE_BITMAP_ROUTER_ENTRY_ACTION_NOACTION:
-        *action_id = NOACTION_ID;
-        break;
-
-    default:
-        SX_LOG_ERR("Invalid router entry action %d\n", action);
-        return SAI_STATUS_INVALID_ATTR_VALUE_0 + param_index;
-    }
-
-    return SAI_STATUS_SUCCESS;
+    return -1;
 }
 
 static void table_bitmap_router_entry_key_to_str(_In_ sai_object_id_t entry_id, _Out_ char *key_str)
@@ -360,183 +345,219 @@ static const mlnx_attr_enum_info_t        table_bitmap_router_entry_enum_info[] 
 const mlnx_obj_type_attrs_info_t          mlnx_table_bitmap_router_entry_obj_type_info =
 { table_bitmap_router_entry_vendor_attribs, OBJ_ATTRS_ENUMS_INFO(table_bitmap_router_entry_enum_info) };
 
-sai_status_t mlnx_create_table_bitmap_router_entry(_Out_ sai_object_id_t      *entry_id,
-                                                   _In_ sai_object_id_t        switch_id,
-                                                   _In_ uint32_t               attr_count,
-                                                   _In_ const sai_attribute_t *attr_list)
+sai_status_t mlnx_create_table_bitmap_router_entry(
+    _Out_ sai_object_id_t *entry_id,
+    _In_ sai_object_id_t switch_id,
+    _In_ uint32_t attr_count,
+    _In_ const sai_attribute_t *attr_list)
 {
-    sai_status_t                 sai_status;
-    uint32_t                     attr_idx;
+    printf("mlnx_create_table_bitmap_router_entry\n");
+    sai_status_t sai_status;
+    uint32_t attr_idx;
     const sai_attribute_value_t *attr;
-    fx_key_t                     bitmap_router_keys[2];
-    fx_param_t                   bitmap_router_params[1];
-    fx_key_list_t                bitmap_router_key_list;
-    fx_param_list_t              bitmap_router_param_list;
-    int                          keys_idx        = 0;
-    int                          params_idx      = 0;
-    fx_action_id_t               flextrum_action = SAI_TABLE_BITMAP_ROUTER_ENTRY_ACTION_NOACTION;
-    char                         list_str[MAX_LIST_VALUE_STR_LEN];
-    char                         key_str[MAX_KEY_STR_LEN];
-    sx_acl_rule_offset_t         bitmap_router_priority;
-    uint32_t                     bitmap_router_in_rif_metadata_key, bitmap_router_in_rif_metadata_mask;
-    uint32_t                     bitmap_router_dst_ip_key, bitmap_router_dst_ip_key_mask;
-    sx_ecmp_id_t                 bitmap_router_next_hop;
-    sx_router_interface_t        bitmap_router_router_interface;
-    sx_flex_acl_trap_action_t    bitmap_router_trap_id;
 
-    SX_LOG_ENTER();
-
-    if (NULL == entry_id) {
-        SX_LOG_ERR("NULL entry id param\n");
-        return SAI_STATUS_INVALID_PARAMETER;
-    }
-
-    if (SAI_STATUS_SUCCESS !=
-        (sai_status =
-             check_attribs_metadata(attr_count, attr_list, SAI_OBJECT_TYPE_TABLE_BITMAP_ROUTER_ENTRY,
-                                    table_bitmap_router_entry_vendor_attribs, SAI_COMMON_API_CREATE))) {
-        SX_LOG_ERR("Failed attribs check\n");
-        SX_LOG_EXIT();
+    // Lazy initialization
+    if (SAI_STATUS_SUCCESS != (sai_status = sai_fx_initialize()))
+    {
+        MLNX_SAI_LOG_ERR("Failure in call to sai_fx_initialize\n");
         return sai_status;
     }
 
-    sai_attr_list_to_str(attr_count,
-                         attr_list,
-                         SAI_OBJECT_TYPE_TABLE_BITMAP_ROUTER_ENTRY,
-                         MAX_LIST_VALUE_STR_LEN,
-                         list_str);
-    SX_LOG_NTC("Create table bitmap route entry, %s\n", list_str);
-
-    /* Lazy initialization */
-    if (SAI_STATUS_SUCCESS != (sai_status = sai_fx_initialize())) {
-        SX_LOG_ERR("Failure in call to sai_fx_initialize\n");
-        return sai_status;
-    }
-
-    sai_status =
-        find_attrib_in_list(attr_count, attr_list, SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_ACTION, &attr, &attr_idx);
-    assert(SAI_STATUS_SUCCESS == sai_status);
-    sai_status = get_bitmap_router_fx_action(attr->s32, &flextrum_action, attr_idx);
-    if (SAI_ERR(sai_status)) {
-        return sai_status;
-    }
-
-    sai_status = find_attrib_in_list(attr_count,
-                                     attr_list,
-                                     SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_PRIORITY,
-                                     &attr,
-                                     &attr_idx);
-    assert(SAI_STATUS_SUCCESS == sai_status);
-    bitmap_router_priority = (sx_acl_rule_offset_t)attr->u32;
-
-    sai_status = find_attrib_in_list(attr_count,
-                                     attr_list,
-                                     SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_IN_RIF_METADATA_KEY,
-                                     &attr,
-                                     &attr_idx);
-    assert(SAI_STATUS_SUCCESS == sai_status);
-    bitmap_router_in_rif_metadata_key     = attr->u32;
-    bitmap_router_keys[keys_idx].key.data = (uint8_t*)&bitmap_router_in_rif_metadata_key;
-    bitmap_router_keys[keys_idx].key.len  = sizeof(bitmap_router_in_rif_metadata_key);
-
-    sai_status = find_attrib_in_list(attr_count,
-                                     attr_list,
-                                     SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_IN_RIF_METADATA_MASK,
-                                     &attr,
-                                     &attr_idx);
-    assert(SAI_STATUS_SUCCESS == sai_status);
-    bitmap_router_in_rif_metadata_mask     = attr->u32;
-    bitmap_router_keys[keys_idx].mask.data = (uint8_t*)&bitmap_router_in_rif_metadata_mask;
-    bitmap_router_keys[keys_idx].mask.len  = sizeof(bitmap_router_in_rif_metadata_mask);
-    keys_idx++;
-
-    sai_status = find_attrib_in_list(attr_count,
-                                     attr_list,
-                                     SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_DST_IP_KEY,
-                                     &attr,
-                                     &attr_idx);
-    assert(SAI_STATUS_SUCCESS == sai_status);
-    if (SAI_IP_ADDR_FAMILY_IPV6 == attr->ipprefix.addr_family) {
-        SX_LOG_ERR("IPv6 router entry DST IP not supported\n");
-        return SAI_STATUS_INVALID_ATTR_VALUE_0 + attr_idx;
-    }
-    memcpy(&bitmap_router_dst_ip_key, &attr->ipprefix.addr.ip4, sizeof(uint32_t));
-    bitmap_router_dst_ip_key = htonl(bitmap_router_dst_ip_key);
-    memcpy(&bitmap_router_dst_ip_key_mask, &attr->ipprefix.mask.ip4, sizeof(uint32_t));
-    bitmap_router_dst_ip_key_mask          = htonl(bitmap_router_dst_ip_key_mask);
-    bitmap_router_keys[keys_idx].key.data  = (uint8_t*)&bitmap_router_dst_ip_key;
-    bitmap_router_keys[keys_idx].key.len   = sizeof(bitmap_router_dst_ip_key);
-    bitmap_router_keys[keys_idx].mask.data = (uint8_t*)&bitmap_router_dst_ip_key_mask;
-    bitmap_router_keys[keys_idx].mask.len  = sizeof(bitmap_router_dst_ip_key_mask);
-    keys_idx++;
-
-    if (CONTROL_IN_RIF_TO_NEXTHOP_ID == flextrum_action) {
-        sai_status = find_attrib_in_list(attr_count,
-                                         attr_list,
-                                         SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_NEXT_HOP,
-                                         &attr,
-                                         &attr_idx);
-        assert(SAI_STATUS_SUCCESS == sai_status);
-        if (SAI_STATUS_SUCCESS !=
+    fx_key_t bitmap_router_keys[2];
+    fx_param_t bitmap_router_params[4];
+    fx_key_list_t bitmap_router_key_list;
+    bitmap_router_key_list.keys = bitmap_router_keys;
+    fx_param_list_t bitmap_router_param_list;
+    bitmap_router_param_list.params = bitmap_router_params;
+    int keys_idx = 0;
+    int params_idx = 0;
+    fx_action_id_t flextrum_action;
+        sai_table_bitmap_router_entry_action_t bitmap_router_action;
+        if (SAI_STATUS_SUCCESS ==
             (sai_status =
-                 mlnx_object_to_type(attr->oid, SAI_OBJECT_TYPE_NEXT_HOP, (uint32_t*)&bitmap_router_next_hop, NULL))) {
-            SX_LOG_ERR("Invalid bitmap router entry next hop\n");
-            return SAI_STATUS_INVALID_ATTR_VALUE_0 + attr_idx;
+                 find_attrib_in_list(attr_count, attr_list, SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_ACTION, &attr, &attr_idx)))
+        {
+            memcpy(&bitmap_router_action, &attr->s32, sizeof(sai_table_bitmap_router_entry_action_t));
         }
-        bitmap_router_params[params_idx].data = (uint8_t*)&bitmap_router_next_hop;
+        else
+        {
+            MLNX_SAI_LOG_ERR("Did not receive mandatory SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_ACTION attribute\n");
+            return SAI_STATUS_INVALID_PARAMETER;
+        }
+
+    flextrum_action = get_bitmap_router_fx_action(bitmap_router_action);
+
+        sx_acl_rule_offset_t bitmap_router_priority;
+        if (SAI_STATUS_SUCCESS ==
+            (sai_status =
+                 find_attrib_in_list(attr_count, attr_list, SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_PRIORITY, &attr, &attr_idx)))
+        {
+            memcpy(&bitmap_router_priority, &attr->u32, sizeof(sx_acl_rule_offset_t));
+        }
+        else
+        {
+            MLNX_SAI_LOG_ERR("Did not receive mandatory SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_PRIORITY attribute\n");
+            return SAI_STATUS_INVALID_PARAMETER;
+        }
+
+        uint32_t bitmap_router_in_rif_metadata_key;
+        if (SAI_STATUS_SUCCESS ==
+            (sai_status =
+                 find_attrib_in_list(attr_count, attr_list, SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_IN_RIF_METADATA_KEY, &attr, &attr_idx)))
+        {
+            memcpy(&bitmap_router_in_rif_metadata_key, &attr->u32, sizeof(uint32_t));
+        bitmap_router_keys[keys_idx].key.data = (uint8_t *)&bitmap_router_in_rif_metadata_key;
+        bitmap_router_keys[keys_idx].key.len  = sizeof(bitmap_router_in_rif_metadata_key);
+        }
+        else
+        {
+            MLNX_SAI_LOG_ERR("Did not receive mandatory SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_IN_RIF_METADATA_KEY attribute\n");
+            return SAI_STATUS_INVALID_PARAMETER;
+        }
+
+        uint32_t bitmap_router_in_rif_metadata_mask;
+        if (SAI_STATUS_SUCCESS ==
+            (sai_status =
+                 find_attrib_in_list(attr_count, attr_list, SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_IN_RIF_METADATA_MASK, &attr, &attr_idx)))
+        {
+            memcpy(&bitmap_router_in_rif_metadata_mask, &attr->u32, sizeof(uint32_t));
+        bitmap_router_keys[keys_idx].mask.data = (uint8_t *)&bitmap_router_in_rif_metadata_mask;
+        bitmap_router_keys[keys_idx].mask.len  = sizeof(bitmap_router_in_rif_metadata_mask);
+        keys_idx++;
+        }
+        else
+        {
+            MLNX_SAI_LOG_ERR("Did not receive mandatory SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_IN_RIF_METADATA_MASK attribute\n");
+            return SAI_STATUS_INVALID_PARAMETER;
+        }
+
+        uint32_t bitmap_router_dst_ip_key;
+        uint32_t bitmap_router_dst_ip_key_mask;
+        if (SAI_STATUS_SUCCESS ==
+            (sai_status =
+                 find_attrib_in_list(attr_count, attr_list, SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_DST_IP_KEY, &attr, &attr_idx)))
+        {
+            memcpy(&bitmap_router_dst_ip_key, &attr->ipprefix.addr.ip4, sizeof(uint32_t));
+            bitmap_router_dst_ip_key = htonl(bitmap_router_dst_ip_key);
+            memcpy(&bitmap_router_dst_ip_key_mask, &attr->ipprefix.mask.ip4, sizeof(uint32_t));
+            bitmap_router_dst_ip_key_mask = htonl(bitmap_router_dst_ip_key_mask);
+        bitmap_router_keys[keys_idx].key.data = (uint8_t *)&bitmap_router_dst_ip_key;
+        bitmap_router_keys[keys_idx].key.len  = sizeof(bitmap_router_dst_ip_key);
+        bitmap_router_keys[keys_idx].mask.data = (uint8_t *)&bitmap_router_dst_ip_key_mask;
+        bitmap_router_keys[keys_idx].mask.len  = sizeof(bitmap_router_dst_ip_key_mask);
+        keys_idx++;
+        }
+        else
+        {
+            MLNX_SAI_LOG_ERR("Did not receive mandatory SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_DST_IP_KEY attribute\n");
+            return SAI_STATUS_INVALID_PARAMETER;
+        }
+
+        uint16_t bitmap_router_tunnel_index;
+        if (flextrum_action == CONTROL_IN_RIF_TO_NEXTHOP_ID)
+        {
+        if (SAI_STATUS_SUCCESS ==
+            (sai_status =
+                 find_attrib_in_list(attr_count, attr_list, SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_TUNNEL_INDEX, &attr, &attr_idx)))
+        {
+            memcpy(&bitmap_router_tunnel_index, &attr->u16, sizeof(uint16_t));
+        bitmap_router_params[params_idx].data = (uint8_t *)&bitmap_router_tunnel_index;
+        bitmap_router_params[params_idx].len  = sizeof(bitmap_router_tunnel_index);
+        params_idx++;
+        }
+        else
+        {
+            MLNX_SAI_LOG_ERR("Did not receive mandatory SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_TUNNEL_INDEX attribute\n");
+            return SAI_STATUS_INVALID_PARAMETER;
+        }
+        }
+
+        sx_ecmp_id_t bitmap_router_next_hop;
+        if (flextrum_action == CONTROL_IN_RIF_TO_NEXTHOP_ID)
+        {
+        if (SAI_STATUS_SUCCESS ==
+            (sai_status =
+                 find_attrib_in_list(attr_count, attr_list, SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_NEXT_HOP, &attr, &attr_idx)))
+        {
+            if (SAI_STATUS_SUCCESS !=
+                (sai_status = mlnx_object_to_type(attr->oid, SAI_OBJECT_TYPE_NEXT_HOP, (uint32_t *)&bitmap_router_next_hop, NULL)))
+            {
+                MLNX_SAI_LOG_ERR("Failed to get sx handle for next_hop\n");
+                return SAI_STATUS_INVALID_ATTR_VALUE_0 + attr_idx;
+            }
+        bitmap_router_params[params_idx].data = (uint8_t *)&bitmap_router_next_hop;
         bitmap_router_params[params_idx].len  = sizeof(bitmap_router_next_hop);
         params_idx++;
-    } else if (CONTROL_IN_RIF_TO_LOCAL_ID == flextrum_action) {
-        sai_status = find_attrib_in_list(attr_count,
-                                         attr_list,
-                                         SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_ROUTER_INTERFACE,
-                                         &attr,
-                                         &attr_idx);
-        assert(SAI_STATUS_SUCCESS == sai_status);
-        if (SAI_STATUS_SUCCESS !=
-            (sai_status = mlnx_rif_oid_to_sdk_rif_id(attr->oid, &bitmap_router_router_interface))) {
-            SX_LOG_ERR("Invalid bitmap router entry rif\n");
-            return SAI_STATUS_INVALID_ATTR_VALUE_0 + attr_idx;
         }
-        bitmap_router_params[params_idx].data = (uint8_t*)&bitmap_router_router_interface;
+        else
+        {
+            MLNX_SAI_LOG_ERR("Did not receive mandatory SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_NEXT_HOP attribute\n");
+            return SAI_STATUS_INVALID_PARAMETER;
+        }
+        }
+
+        sx_router_interface_t bitmap_router_router_interface;
+        if (flextrum_action == CONTROL_IN_RIF_TO_LOCAL_ID)
+        {
+        if (SAI_STATUS_SUCCESS ==
+            (sai_status =
+                 find_attrib_in_list(attr_count, attr_list, SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_ROUTER_INTERFACE, &attr, &attr_idx)))
+        {
+            if (SAI_STATUS_SUCCESS !=
+                (sai_status = mlnx_rif_oid_to_sdk_rif_id(attr->oid, &bitmap_router_router_interface)))
+            {
+                MLNX_SAI_LOG_ERR("Failed to get sx handle for router_interface\n");
+                return SAI_STATUS_INVALID_ATTR_VALUE_0 + attr_idx;
+            }
+        bitmap_router_params[params_idx].data = (uint8_t *)&bitmap_router_router_interface;
         bitmap_router_params[params_idx].len  = sizeof(bitmap_router_router_interface);
         params_idx++;
-    } else if (CONTROL_IN_RIF_TO_CPU_ID == flextrum_action) {
-        sai_status = find_attrib_in_list(attr_count,
-                                         attr_list,
-                                         SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_TRAP_ID,
-                                         &attr,
-                                         &attr_idx);
-        assert(SAI_STATUS_SUCCESS == sai_status);
-        if (SAI_STATUS_SUCCESS !=
-            (sai_status =
-                 mlnx_object_to_type(attr->oid, SAI_OBJECT_TYPE_HOSTIF_TRAP, (uint32_t*)&bitmap_router_trap_id,
-                                     NULL))) {
-            SX_LOG_ERR("Invalid bitmap router entry trap id\n");
-            return SAI_STATUS_INVALID_ATTR_VALUE_0 + attr_idx;
         }
-        bitmap_router_params[params_idx].data = (uint8_t*)&bitmap_router_trap_id;
+        else
+        {
+            MLNX_SAI_LOG_ERR("Did not receive mandatory SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_ROUTER_INTERFACE attribute\n");
+            return SAI_STATUS_INVALID_PARAMETER;
+        }
+        }
+
+        sx_flex_acl_trap_action_t bitmap_router_trap_id;
+        if (flextrum_action == CONTROL_IN_RIF_TO_CPU_ID)
+        {
+        if (SAI_STATUS_SUCCESS ==
+            (sai_status =
+                 find_attrib_in_list(attr_count, attr_list, SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_TRAP_ID, &attr, &attr_idx)))
+        {
+            if (SAI_STATUS_SUCCESS !=
+                (sai_status = mlnx_object_to_type(attr->oid, SAI_OBJECT_TYPE_HOSTIF_TRAP, (uint32_t *)&bitmap_router_trap_id, NULL)))
+            {
+                MLNX_SAI_LOG_ERR("Failed to get sx handle for trap_id\n");
+                return SAI_STATUS_INVALID_ATTR_VALUE_0 + attr_idx;
+            }
+        bitmap_router_params[params_idx].data = (uint8_t *)&bitmap_router_trap_id;
         bitmap_router_params[params_idx].len  = sizeof(bitmap_router_trap_id);
         params_idx++;
-    }
+        }
+        else
+        {
+            MLNX_SAI_LOG_ERR("Did not receive mandatory SAI_TABLE_BITMAP_ROUTER_ENTRY_ATTR_TRAP_ID attribute\n");
+            return SAI_STATUS_INVALID_PARAMETER;
+        }
+        }
 
-    bitmap_router_key_list.len      = keys_idx;
-    bitmap_router_param_list.len    = params_idx;
-    bitmap_router_key_list.keys     = bitmap_router_keys;
-    bitmap_router_param_list.params = bitmap_router_params;
-    if (fx_table_entry_add(g_fx_handle, CONTROL_IN_RIF_TABLE_BITMAP_ROUTER_ID, flextrum_action, bitmap_router_key_list,
-                           bitmap_router_param_list, &bitmap_router_priority)) {
-        SX_LOG_ERR("Failure in insertion of bitmap_router entry\n");
+    bitmap_router_key_list.len = keys_idx;
+    bitmap_router_param_list.len = params_idx;
+    if (fx_table_entry_add(g_fx_handle, CONTROL_IN_RIF_TABLE_BITMAP_ROUTER_ID, flextrum_action, bitmap_router_key_list, bitmap_router_param_list, &bitmap_router_priority))
+    {
+        MLNX_SAI_LOG_ERR("Failure in insertion of bitmap_router entry\n");
         return SAI_STATUS_FAILURE;
     }
     if (SAI_STATUS_SUCCESS !=
         (sai_status =
-             mlnx_create_object(SAI_OBJECT_TYPE_TABLE_BITMAP_ROUTER_ENTRY, bitmap_router_priority, NULL, entry_id))) {
+             mlnx_create_object(SAI_OBJECT_TYPE_TABLE_BITMAP_ROUTER_ENTRY, bitmap_router_priority,
+                                NULL,
+                                entry_id))) {
         return sai_status;
     }
-
-    table_bitmap_router_entry_key_to_str(*entry_id, key_str);
-    SX_LOG_NTC("Created table bitmap router entry %s\n", key_str);
 
     return SAI_STATUS_SUCCESS;
 }
@@ -577,6 +598,183 @@ sai_status_t mlnx_get_table_bitmap_router_entry_attribute(_In_ sai_object_id_t  
     return SAI_STATUS_NOT_IMPLEMENTED;
 }
 
+fx_action_id_t get_l3_vxlan_fx_action(
+    _In_ sai_table_l3_vxlan_entry_action_t action)
+{
+    switch (action)
+    {
+        case SAI_TABLE_L3_VXLAN_ENTRY_ACTION_TUNNEL_ENCAP:
+            return CONTROL_OUT_RIF_TUNNEL_ENCAP_ID;
+        case SAI_TABLE_L3_VXLAN_ENTRY_ACTION_NOACTION:
+            return NOACTION_ID;
+        default:
+            return -1;
+    }
+
+    return -1;
+}
+
+sai_status_t mlnx_create_table_l3_vxlan_entry(
+    _Out_ sai_object_id_t *entry_id,
+    _In_ sai_object_id_t switch_id,
+    _In_ uint32_t attr_count,
+    _In_ const sai_attribute_t *attr_list)
+{
+    printf("mlnx_create_table_l3_vxlan_entry\n");
+    sai_status_t sai_status;
+    uint32_t attr_idx;
+    const sai_attribute_value_t *attr;
+
+    // Lazy initialization
+    if (SAI_STATUS_SUCCESS != (sai_status = sai_fx_initialize()))
+    {
+        MLNX_SAI_LOG_ERR("Failure in call to sai_fx_initialize\n");
+        return sai_status;
+    }
+
+    fx_key_t l3_vxlan_keys[1];
+    fx_param_t l3_vxlan_params[2];
+    fx_key_list_t l3_vxlan_key_list;
+    l3_vxlan_key_list.keys = l3_vxlan_keys;
+    fx_param_list_t l3_vxlan_param_list;
+    l3_vxlan_param_list.params = l3_vxlan_params;
+    int keys_idx = 0;
+    int params_idx = 0;
+    fx_action_id_t flextrum_action;
+        sai_table_l3_vxlan_entry_action_t l3_vxlan_action;
+        if (SAI_STATUS_SUCCESS ==
+            (sai_status =
+                 find_attrib_in_list(attr_count, attr_list, SAI_TABLE_L3_VXLAN_ENTRY_ATTR_ACTION, &attr, &attr_idx)))
+        {
+            memcpy(&l3_vxlan_action, &attr->s32, sizeof(sai_table_l3_vxlan_entry_action_t));
+        }
+        else
+        {
+            MLNX_SAI_LOG_ERR("Did not receive mandatory SAI_TABLE_L3_VXLAN_ENTRY_ATTR_ACTION attribute\n");
+            return SAI_STATUS_INVALID_PARAMETER;
+        }
+
+    flextrum_action = get_l3_vxlan_fx_action(l3_vxlan_action);
+
+    sx_acl_rule_offset_t l3_vxlan_priority = 0;
+        uint16_t l3_vxlan_metadata_key;
+        if (SAI_STATUS_SUCCESS ==
+            (sai_status =
+                 find_attrib_in_list(attr_count, attr_list, SAI_TABLE_L3_VXLAN_ENTRY_ATTR_METADATA_KEY, &attr, &attr_idx)))
+        {
+            memcpy(&l3_vxlan_metadata_key, &attr->u16, sizeof(uint16_t));
+        l3_vxlan_keys[keys_idx].key.data = (uint8_t *)&l3_vxlan_metadata_key;
+        l3_vxlan_keys[keys_idx].key.len  = sizeof(l3_vxlan_metadata_key);
+        keys_idx++;
+        }
+        else
+        {
+            MLNX_SAI_LOG_ERR("Did not receive mandatory SAI_TABLE_L3_VXLAN_ENTRY_ATTR_METADATA_KEY attribute\n");
+            return SAI_STATUS_INVALID_PARAMETER;
+        }
+
+        sx_tunnel_id_t l3_vxlan_tunnel_id;
+        if (flextrum_action == CONTROL_OUT_RIF_TUNNEL_ENCAP_ID)
+        {
+        if (SAI_STATUS_SUCCESS ==
+            (sai_status =
+                 find_attrib_in_list(attr_count, attr_list, SAI_TABLE_L3_VXLAN_ENTRY_ATTR_TUNNEL_ID, &attr, &attr_idx)))
+        {
+            if (SAI_STATUS_SUCCESS !=
+                (sai_status = mlnx_sai_tunnel_to_sx_tunnel_id(attr->oid, &l3_vxlan_tunnel_id)))
+            {
+                MLNX_SAI_LOG_ERR("Failed to get sx handle for tunnel_id\n");
+                return SAI_STATUS_INVALID_ATTR_VALUE_0 + attr_idx;
+            }
+        l3_vxlan_params[params_idx].data = (uint8_t *)&l3_vxlan_tunnel_id;
+        l3_vxlan_params[params_idx].len  = sizeof(l3_vxlan_tunnel_id);
+        params_idx++;
+        }
+        else
+        {
+            MLNX_SAI_LOG_ERR("Did not receive mandatory SAI_TABLE_L3_VXLAN_ENTRY_ATTR_TUNNEL_ID attribute\n");
+            return SAI_STATUS_INVALID_PARAMETER;
+        }
+        }
+
+        uint32_t l3_vxlan_underlay_dip;
+        if (flextrum_action == CONTROL_OUT_RIF_TUNNEL_ENCAP_ID)
+        {
+        if (SAI_STATUS_SUCCESS ==
+            (sai_status =
+                 find_attrib_in_list(attr_count, attr_list, SAI_TABLE_L3_VXLAN_ENTRY_ATTR_UNDERLAY_DIP, &attr, &attr_idx)))
+        {
+            memcpy(&l3_vxlan_underlay_dip, &attr->ipaddr.addr.ip4, sizeof(uint32_t));
+            l3_vxlan_underlay_dip = htonl(l3_vxlan_underlay_dip);
+        l3_vxlan_params[params_idx].data = (uint8_t *)&l3_vxlan_underlay_dip;
+        l3_vxlan_params[params_idx].len  = sizeof(l3_vxlan_underlay_dip);
+        params_idx++;
+        }
+        else
+        {
+            MLNX_SAI_LOG_ERR("Did not receive mandatory SAI_TABLE_L3_VXLAN_ENTRY_ATTR_UNDERLAY_DIP attribute\n");
+            return SAI_STATUS_INVALID_PARAMETER;
+        }
+        }
+
+    l3_vxlan_key_list.len = keys_idx;
+    l3_vxlan_param_list.len = params_idx;
+    SX_LOG_ERR("marianp Before insertion of l3_vxlan entry %u tunnel_id %u\n", flextrum_action,  l3_vxlan_tunnel_id);
+    if (fx_table_entry_add(g_fx_handle, CONTROL_OUT_RIF_TABLE_L3_VXLAN_ID, flextrum_action, l3_vxlan_key_list, l3_vxlan_param_list, &l3_vxlan_priority))
+    {
+        MLNX_SAI_LOG_ERR("Failure in insertion of l3_vxlan entry\n");
+        return SAI_STATUS_FAILURE;
+    }
+    if (SAI_STATUS_SUCCESS !=
+        (sai_status =
+             mlnx_create_object(SAI_OBJECT_TYPE_TABLE_L3_VXLAN_ENTRY, l3_vxlan_priority,
+                                NULL,
+                                entry_id))) {
+        return sai_status;
+    }
+
+    return SAI_STATUS_SUCCESS;
+}
+
+sai_status_t mlnx_remove_table_l3_vxlan_entry(
+    _In_ sai_object_id_t entry_id)
+{
+    printf("mlnx_remove_table_l3_vxlan_entry\n");
+    sai_status_t status;
+    uint32_t l3_vxlan_offset;
+    if (SAI_STATUS_SUCCESS !=
+        (status =
+             mlnx_object_to_type(entry_id, SAI_OBJECT_TYPE_TABLE_L3_VXLAN_ENTRY,
+                                 &l3_vxlan_offset,
+                                 NULL))) {
+        SX_LOG_ERR("Failure in extracting offest from l3_vxlan entry object id 0x%lx " PRIx64 "\n",
+                   entry_id);
+        return status;
+    }
+
+    if (fx_table_entry_remove(g_fx_handle, CONTROL_OUT_RIF_TABLE_L3_VXLAN_ID, l3_vxlan_offset))
+    {
+        MLNX_SAI_LOG_ERR("Failure in removal of table_l3_vxlan entry at offset %d\n", l3_vxlan_offset);
+        return SAI_STATUS_FAILURE;
+    }
+    return SAI_STATUS_SUCCESS;
+}
+
+sai_status_t mlnx_set_table_l3_vxlan_entry_attribute(
+    _In_ sai_object_id_t entry_id,
+    _In_ const sai_attribute_t *attr)
+{
+    return SAI_STATUS_NOT_IMPLEMENTED;
+}
+
+sai_status_t mlnx_get_table_l3_vxlan_entry_attribute(
+    _In_ sai_object_id_t entry_id,
+    _In_ uint32_t attr_count,
+    _Inout_ sai_attribute_t *attr_list)
+{
+    return SAI_STATUS_NOT_IMPLEMENTED;
+}
+
 static sai_status_t sai_fx_rebind()
 {
     sx_router_interface_t rif_list[RIF_NUM];
@@ -589,6 +787,11 @@ static sai_status_t sai_fx_rebind()
         return sdk_to_sai(sx_status);
     }
     sx_status = fx_pipe_rebind(g_fx_handle, FX_CONTROL_IN_RIF, (void*)rif_list, num_of_rifs);
+    if (SX_ERR(sx_status)) {
+        SX_LOG_ERR("Fx pipe rebind error %s\n", SX_STATUS_MSG(sx_status));
+        return sdk_to_sai(sx_status);
+    }
+    sx_status = fx_pipe_rebind(g_fx_handle, FX_CONTROL_OUT_RIF, (void*)rif_list, num_of_rifs);
     if (SX_ERR(sx_status)) {
         SX_LOG_ERR("Fx pipe rebind error %s\n", SX_STATUS_MSG(sx_status));
         return sdk_to_sai(sx_status);
@@ -708,6 +911,11 @@ static sai_status_t sai_fx_initialize()
         SX_LOG_ERR("Fx pipe create error %s\n", SX_STATUS_MSG(sx_status));
         return sdk_to_sai(sx_status);
     }
+    sx_status = fx_pipe_create(g_fx_handle, FX_CONTROL_OUT_RIF, (void*)rif_list, num_of_rifs);
+    if (SX_ERR(sx_status)) {
+        SX_LOG_ERR("Fx pipe create error %s\n", SX_STATUS_MSG(sx_status));
+        return sdk_to_sai(sx_status);
+    }
 
     g_fx_initialized = true;
     return SAI_STATUS_SUCCESS;
@@ -727,6 +935,11 @@ sai_status_t sai_fx_uninitialize()
     sx_status        = fx_get_bindable_rif_list(g_fx_handle, rif_list, &num_of_rifs);
     if (SX_ERR(sx_status)) {
         SX_LOG_ERR("Fx get bindable rif list error %s\n", SX_STATUS_MSG(sx_status));
+        return sdk_to_sai(sx_status);
+    }
+    sx_status = fx_pipe_destroy(g_fx_handle, FX_CONTROL_OUT_RIF, (void*)rif_list, num_of_rifs);
+    if (SX_ERR(sx_status)) {
+        SX_LOG_ERR("Fx pipe destroy error %s\n", SX_STATUS_MSG(sx_status));
         return sdk_to_sai(sx_status);
     }
     sx_status = fx_pipe_destroy(g_fx_handle, FX_CONTROL_IN_RIF, (void*)rif_list, num_of_rifs);
@@ -766,6 +979,13 @@ const sai_bmtor_api_t mlnx_bmtor_api = {
     mlnx_remove_table_bitmap_router_entry,
     mlnx_set_table_bitmap_router_entry_attribute,
     mlnx_get_table_bitmap_router_entry_attribute,
+    NULL,
+    NULL,
+    NULL,
+    mlnx_create_table_l3_vxlan_entry,
+    mlnx_remove_table_l3_vxlan_entry,
+    mlnx_set_table_l3_vxlan_entry_attribute,
+    mlnx_get_table_l3_vxlan_entry_attribute,
     NULL,
     NULL,
     NULL,

@@ -2307,6 +2307,8 @@ sai_status_t mlnx_acl_psort_thread_resume(void);
 sai_status_t mlnx_port_cb_table_init(void);
 sai_status_t mlnx_acl_cb_table_init(void);
 
+sai_status_t mlnx_sai_tunnel_to_sx_tunnel_id(_In_ sai_object_id_t  sai_tunnel_id,
+                                                    _Out_ sx_tunnel_id_t *sx_tunnel_id);
 #define LINE_LENGTH 120
 
 void SAI_dump_acl(_In_ FILE *file);
