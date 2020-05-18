@@ -236,7 +236,7 @@ extern const sai_bfd_api_t              mlnx_bfd_api;
 #define PORT_SPEED_MAX_SP3              PORT_SPEED_400
 #define NUM_SPEEDS                      10
 #define CPU_PORT                        0
-#define ECMP_MAX_PATHS                  64
+#define ECMP_MAX_PATHS                  256
 #define SX_DEVICE_ID                    1
 #define DEFAULT_DEVICE_ID               255
 #define DEFAULT_VLAN                    1
