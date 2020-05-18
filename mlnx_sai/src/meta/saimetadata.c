@@ -4823,6 +4823,8 @@ const sai_next_hop_group_attr_t sai_metadata_sai_next_hop_group_attr_t_enum_valu
     SAI_NEXT_HOP_GROUP_ATTR_TYPE,
     SAI_NEXT_HOP_GROUP_ATTR_SET_SWITCHOVER,
     SAI_NEXT_HOP_GROUP_ATTR_COUNTER_ID,
+    SAI_NEXT_HOP_GROUP_ATTR_CONFIGURED_SIZE,
+    SAI_NEXT_HOP_GROUP_ATTR_REAL_SIZE,
     -1
 };
 const char* const sai_metadata_sai_next_hop_group_attr_t_enum_values_names[] = {
@@ -4831,6 +4833,8 @@ const char* const sai_metadata_sai_next_hop_group_attr_t_enum_values_names[] = {
     "SAI_NEXT_HOP_GROUP_ATTR_TYPE",
     "SAI_NEXT_HOP_GROUP_ATTR_SET_SWITCHOVER",
     "SAI_NEXT_HOP_GROUP_ATTR_COUNTER_ID",
+    "SAI_NEXT_HOP_GROUP_ATTR_CONFIGURED_SIZE",
+    "SAI_NEXT_HOP_GROUP_ATTR_REAL_SIZE",
     NULL
 };
 const char* const sai_metadata_sai_next_hop_group_attr_t_enum_values_short_names[] = {
@@ -4839,11 +4843,13 @@ const char* const sai_metadata_sai_next_hop_group_attr_t_enum_values_short_names
     "TYPE",
     "SET_SWITCHOVER",
     "COUNTER_ID",
+    "CONFIGURED_SIZE",
+    "REAL_SIZE",
     NULL
 };
 const sai_enum_metadata_t sai_metadata_enum_sai_next_hop_group_attr_t = {
     .name              = "sai_next_hop_group_attr_t",
-    .valuescount       = 5,
+    .valuescount       = 7,
     .values            = (const int*)sai_metadata_sai_next_hop_group_attr_t_enum_values,
     .valuesnames       = sai_metadata_sai_next_hop_group_attr_t_enum_values_names,
     .valuesshortnames  = sai_metadata_sai_next_hop_group_attr_t_enum_values_short_names,
@@ -4856,6 +4862,8 @@ const sai_next_hop_group_member_attr_t sai_metadata_sai_next_hop_group_member_at
     SAI_NEXT_HOP_GROUP_MEMBER_ATTR_CONFIGURED_ROLE,
     SAI_NEXT_HOP_GROUP_MEMBER_ATTR_OBSERVED_ROLE,
     SAI_NEXT_HOP_GROUP_MEMBER_ATTR_MONITORED_OBJECT,
+    SAI_NEXT_HOP_GROUP_MEMBER_ATTR_INDEX,
+    SAI_NEXT_HOP_GROUP_MEMBER_ATTR_SEQUENCE_ID,
     -1
 };
 const char* const sai_metadata_sai_next_hop_group_member_attr_t_enum_values_names[] = {
@@ -4865,6 +4873,8 @@ const char* const sai_metadata_sai_next_hop_group_member_attr_t_enum_values_name
     "SAI_NEXT_HOP_GROUP_MEMBER_ATTR_CONFIGURED_ROLE",
     "SAI_NEXT_HOP_GROUP_MEMBER_ATTR_OBSERVED_ROLE",
     "SAI_NEXT_HOP_GROUP_MEMBER_ATTR_MONITORED_OBJECT",
+    "SAI_NEXT_HOP_GROUP_MEMBER_ATTR_INDEX",
+    "SAI_NEXT_HOP_GROUP_MEMBER_ATTR_SEQUENCE_ID",
     NULL
 };
 const char* const sai_metadata_sai_next_hop_group_member_attr_t_enum_values_short_names[] = {
@@ -4874,11 +4884,13 @@ const char* const sai_metadata_sai_next_hop_group_member_attr_t_enum_values_shor
     "CONFIGURED_ROLE",
     "OBSERVED_ROLE",
     "MONITORED_OBJECT",
+    "INDEX",
+    "SEQUENCE_ID",
     NULL
 };
 const sai_enum_metadata_t sai_metadata_enum_sai_next_hop_group_member_attr_t = {
     .name              = "sai_next_hop_group_member_attr_t",
-    .valuescount       = 6,
+    .valuescount       = 8,
     .values            = (const int*)sai_metadata_sai_next_hop_group_member_attr_t_enum_values,
     .valuesnames       = sai_metadata_sai_next_hop_group_member_attr_t_enum_values_names,
     .valuesshortnames  = sai_metadata_sai_next_hop_group_member_attr_t_enum_values_short_names,
@@ -4931,23 +4943,29 @@ const sai_enum_metadata_t sai_metadata_enum_sai_next_hop_group_member_observed_r
     .containsflags     = false,
 };
 const sai_next_hop_group_type_t sai_metadata_sai_next_hop_group_type_t_enum_values[] = {
-    SAI_NEXT_HOP_GROUP_TYPE_ECMP,
+    SAI_NEXT_HOP_GROUP_TYPE_DYNAMIC_UNORDERED_ECMP,
+    SAI_NEXT_HOP_GROUP_TYPE_DYNAMIC_ORDERED_ECMP,
+    SAI_NEXT_HOP_GROUP_TYPE_FINE_GRAIN_ECMP,
     SAI_NEXT_HOP_GROUP_TYPE_PROTECTION,
     -1
 };
 const char* const sai_metadata_sai_next_hop_group_type_t_enum_values_names[] = {
-    "SAI_NEXT_HOP_GROUP_TYPE_ECMP",
+    "SAI_NEXT_HOP_GROUP_TYPE_DYNAMIC_UNORDERED_ECMP",
+    "SAI_NEXT_HOP_GROUP_TYPE_DYNAMIC_ORDERED_ECMP",
+    "SAI_NEXT_HOP_GROUP_TYPE_FINE_GRAIN_ECMP",
     "SAI_NEXT_HOP_GROUP_TYPE_PROTECTION",
     NULL
 };
 const char* const sai_metadata_sai_next_hop_group_type_t_enum_values_short_names[] = {
-    "ECMP",
+    "DYNAMIC_UNORDERED_ECMP",
+    "DYNAMIC_ORDERED_ECMP",
+    "FINE_GRAIN_ECMP",
     "PROTECTION",
     NULL
 };
 const sai_enum_metadata_t sai_metadata_enum_sai_next_hop_group_type_t = {
     .name              = "sai_next_hop_group_type_t",
-    .valuescount       = 2,
+    .valuescount       = 4,
     .values            = (const int*)sai_metadata_sai_next_hop_group_type_t_enum_values,
     .valuesnames       = sai_metadata_sai_next_hop_group_type_t_enum_values_names,
     .valuesshortnames  = sai_metadata_sai_next_hop_group_type_t_enum_values_short_names,
@@ -34399,6 +34417,107 @@ const sai_attr_metadata_t sai_metadata_attr_SAI_NEXT_HOP_GROUP_ATTR_COUNTER_ID =
     .isextensionattr               = false,
     .isresourcetype                = false,
 };
+const sai_attribute_value_t sai_metadata_SAI_NEXT_HOP_GROUP_ATTR_CONFIGURED_SIZE_default_value = { .u32 = 0 };
+const sai_attr_condition_t sai_metadata_validonly_SAI_NEXT_HOP_GROUP_ATTR_CONFIGURED_SIZE_0 = {
+        .attrid = SAI_NEXT_HOP_GROUP_ATTR_TYPE,
+        .condition = { .s32 = SAI_NEXT_HOP_GROUP_TYPE_FINE_GRAIN_ECMP }
+};
+const sai_attr_condition_t* const sai_metadata_validonlys_SAI_NEXT_HOP_GROUP_ATTR_CONFIGURED_SIZE[] = {
+    &sai_metadata_validonly_SAI_NEXT_HOP_GROUP_ATTR_CONFIGURED_SIZE_0,
+    NULL
+};
+const sai_attr_metadata_t sai_metadata_attr_SAI_NEXT_HOP_GROUP_ATTR_CONFIGURED_SIZE = {
+    .objecttype                    = SAI_OBJECT_TYPE_NEXT_HOP_GROUP,
+    .attrid                        = SAI_NEXT_HOP_GROUP_ATTR_CONFIGURED_SIZE,
+    .attridname                    = "SAI_NEXT_HOP_GROUP_ATTR_CONFIGURED_SIZE",
+    .brief                         = "Configured group size.",
+    .attrvaluetype                 = SAI_ATTR_VALUE_TYPE_UINT32,
+    .flags                         = (sai_attr_flags_t)(SAI_ATTR_FLAGS_CREATE_ONLY),
+    .allowedobjecttypes            = NULL,
+    .allowedobjecttypeslength      = 0,
+    .allowrepetitiononlist         = false,
+    .allowmixedobjecttypes         = false,
+    .allowemptylist                = false,
+    .allownullobjectid             = false,
+    .isoidattribute                = (0 > 0),
+    .defaultvaluetype              = SAI_DEFAULT_VALUE_TYPE_CONST,
+    .defaultvalue                  = &sai_metadata_SAI_NEXT_HOP_GROUP_ATTR_CONFIGURED_SIZE_default_value,
+    .defaultvalueobjecttype        = SAI_OBJECT_TYPE_NULL,
+    .defaultvalueattrid            = SAI_INVALID_ATTRIBUTE_ID,
+    .storedefaultvalue             = false,
+    .isenum                        = false,
+    .isenumlist                    = false,
+    .enummetadata                  = NULL,
+    .conditiontype                 = SAI_ATTR_CONDITION_TYPE_NONE,
+    .conditions                    = NULL,
+    .conditionslength              = 0,
+    .isconditional                 = (0 != 0),
+    .validonlytype                 = SAI_ATTR_CONDITION_TYPE_OR,
+    .validonly                     = sai_metadata_validonlys_SAI_NEXT_HOP_GROUP_ATTR_CONFIGURED_SIZE,
+    .validonlylength               = 1,
+    .isvalidonly                   = (1 != 0),
+    .getsave                       = false,
+    .isvlan                        = false,
+    .isaclfield                    = false,
+    .isaclaction                   = false,
+    .ismandatoryoncreate           = false,
+    .iscreateonly                  = true,
+    .iscreateandset                = false,
+    .isreadonly                    = false,
+    .iskey                         = false,
+    .isprimitive                   = true,
+    .notificationtype              = -1,
+    .capability                    = NULL,
+    .capabilitylength              = 0,
+    .isextensionattr               = false,
+    .isresourcetype                = true,
+};
+const sai_attr_metadata_t sai_metadata_attr_SAI_NEXT_HOP_GROUP_ATTR_REAL_SIZE = {
+    .objecttype                    = SAI_OBJECT_TYPE_NEXT_HOP_GROUP,
+    .attrid                        = SAI_NEXT_HOP_GROUP_ATTR_REAL_SIZE,
+    .attridname                    = "SAI_NEXT_HOP_GROUP_ATTR_REAL_SIZE",
+    .brief                         = "Real group size.",
+    .attrvaluetype                 = SAI_ATTR_VALUE_TYPE_UINT32,
+    .flags                         = (sai_attr_flags_t)(SAI_ATTR_FLAGS_READ_ONLY),
+    .allowedobjecttypes            = NULL,
+    .allowedobjecttypeslength      = 0,
+    .allowrepetitiononlist         = false,
+    .allowmixedobjecttypes         = false,
+    .allowemptylist                = false,
+    .allownullobjectid             = false,
+    .isoidattribute                = (0 > 0),
+    .defaultvaluetype              = SAI_DEFAULT_VALUE_TYPE_NONE,
+    .defaultvalue                  = NULL,
+    .defaultvalueobjecttype        = SAI_OBJECT_TYPE_NULL,
+    .defaultvalueattrid            = SAI_INVALID_ATTRIBUTE_ID,
+    .storedefaultvalue             = false,
+    .isenum                        = false,
+    .isenumlist                    = false,
+    .enummetadata                  = NULL,
+    .conditiontype                 = SAI_ATTR_CONDITION_TYPE_NONE,
+    .conditions                    = NULL,
+    .conditionslength              = 0,
+    .isconditional                 = (0 != 0),
+    .validonlytype                 = SAI_ATTR_CONDITION_TYPE_NONE,
+    .validonly                     = NULL,
+    .validonlylength               = 0,
+    .isvalidonly                   = (0 != 0),
+    .getsave                       = false,
+    .isvlan                        = false,
+    .isaclfield                    = false,
+    .isaclaction                   = false,
+    .ismandatoryoncreate           = false,
+    .iscreateonly                  = false,
+    .iscreateandset                = false,
+    .isreadonly                    = true,
+    .iskey                         = false,
+    .isprimitive                   = true,
+    .notificationtype              = -1,
+    .capability                    = NULL,
+    .capabilitylength              = 0,
+    .isextensionattr               = false,
+    .isresourcetype                = false,
+};
 const sai_object_type_t sai_metadata_SAI_NEXT_HOP_GROUP_MEMBER_ATTR_NEXT_HOP_GROUP_ID_allowed_objects[] = {
     SAI_OBJECT_TYPE_NEXT_HOP_GROUP,
     -1
@@ -34459,7 +34578,7 @@ const sai_attr_metadata_t sai_metadata_attr_SAI_NEXT_HOP_GROUP_MEMBER_ATTR_NEXT_
     .attridname                    = "SAI_NEXT_HOP_GROUP_MEMBER_ATTR_NEXT_HOP_ID",
     .brief                         = "Next hop id.",
     .attrvaluetype                 = SAI_ATTR_VALUE_TYPE_OBJECT_ID,
-    .flags                         = (sai_attr_flags_t)(SAI_ATTR_FLAGS_MANDATORY_ON_CREATE|SAI_ATTR_FLAGS_CREATE_ONLY),
+    .flags                         = (sai_attr_flags_t)(SAI_ATTR_FLAGS_MANDATORY_ON_CREATE|SAI_ATTR_FLAGS_CREATE_AND_SET),
     .allowedobjecttypes            = sai_metadata_SAI_NEXT_HOP_GROUP_MEMBER_ATTR_NEXT_HOP_ID_allowed_objects,
     .allowedobjecttypeslength      = 1,
     .allowrepetitiononlist         = false,
@@ -34471,7 +34590,7 @@ const sai_attr_metadata_t sai_metadata_attr_SAI_NEXT_HOP_GROUP_MEMBER_ATTR_NEXT_
     .defaultvalue                  = NULL,
     .defaultvalueobjecttype        = SAI_OBJECT_TYPE_NULL,
     .defaultvalueattrid            = SAI_INVALID_ATTRIBUTE_ID,
-    .storedefaultvalue             = false,
+    .storedefaultvalue             = true,
     .isenum                        = false,
     .isenumlist                    = false,
     .enummetadata                  = NULL,
@@ -34488,8 +34607,8 @@ const sai_attr_metadata_t sai_metadata_attr_SAI_NEXT_HOP_GROUP_MEMBER_ATTR_NEXT_
     .isaclfield                    = false,
     .isaclaction                   = false,
     .ismandatoryoncreate           = true,
-    .iscreateonly                  = true,
-    .iscreateandset                = false,
+    .iscreateonly                  = false,
+    .iscreateandset                = true,
     .isreadonly                    = false,
     .iskey                         = false,
     .isprimitive                   = true,
@@ -34686,6 +34805,100 @@ const sai_attr_metadata_t sai_metadata_attr_SAI_NEXT_HOP_GROUP_MEMBER_ATTR_MONIT
     .ismandatoryoncreate           = false,
     .iscreateonly                  = false,
     .iscreateandset                = true,
+    .isreadonly                    = false,
+    .iskey                         = false,
+    .isprimitive                   = true,
+    .notificationtype              = -1,
+    .capability                    = NULL,
+    .capabilitylength              = 0,
+    .isextensionattr               = false,
+    .isresourcetype                = false,
+};
+const sai_attribute_value_t sai_metadata_SAI_NEXT_HOP_GROUP_MEMBER_ATTR_INDEX_default_value = { .u32 = 0 };
+const sai_attr_metadata_t sai_metadata_attr_SAI_NEXT_HOP_GROUP_MEMBER_ATTR_INDEX = {
+    .objecttype                    = SAI_OBJECT_TYPE_NEXT_HOP_GROUP_MEMBER,
+    .attrid                        = SAI_NEXT_HOP_GROUP_MEMBER_ATTR_INDEX,
+    .attridname                    = "SAI_NEXT_HOP_GROUP_MEMBER_ATTR_INDEX",
+    .brief                         = "Object index in the fine grain ECMP table.",
+    .attrvaluetype                 = SAI_ATTR_VALUE_TYPE_UINT32,
+    .flags                         = (sai_attr_flags_t)(SAI_ATTR_FLAGS_CREATE_ONLY),
+    .allowedobjecttypes            = NULL,
+    .allowedobjecttypeslength      = 0,
+    .allowrepetitiononlist         = false,
+    .allowmixedobjecttypes         = false,
+    .allowemptylist                = false,
+    .allownullobjectid             = false,
+    .isoidattribute                = (0 > 0),
+    .defaultvaluetype              = SAI_DEFAULT_VALUE_TYPE_CONST,
+    .defaultvalue                  = &sai_metadata_SAI_NEXT_HOP_GROUP_MEMBER_ATTR_INDEX_default_value,
+    .defaultvalueobjecttype        = SAI_OBJECT_TYPE_NULL,
+    .defaultvalueattrid            = SAI_INVALID_ATTRIBUTE_ID,
+    .storedefaultvalue             = false,
+    .isenum                        = false,
+    .isenumlist                    = false,
+    .enummetadata                  = NULL,
+    .conditiontype                 = SAI_ATTR_CONDITION_TYPE_NONE,
+    .conditions                    = NULL,
+    .conditionslength              = 0,
+    .isconditional                 = (0 != 0),
+    .validonlytype                 = SAI_ATTR_CONDITION_TYPE_NONE,
+    .validonly                     = NULL,
+    .validonlylength               = 0,
+    .isvalidonly                   = (0 != 0),
+    .getsave                       = false,
+    .isvlan                        = false,
+    .isaclfield                    = false,
+    .isaclaction                   = false,
+    .ismandatoryoncreate           = false,
+    .iscreateonly                  = true,
+    .iscreateandset                = false,
+    .isreadonly                    = false,
+    .iskey                         = false,
+    .isprimitive                   = true,
+    .notificationtype              = -1,
+    .capability                    = NULL,
+    .capabilitylength              = 0,
+    .isextensionattr               = false,
+    .isresourcetype                = false,
+};
+const sai_attribute_value_t sai_metadata_SAI_NEXT_HOP_GROUP_MEMBER_ATTR_SEQUENCE_ID_default_value = { .u32 = 0 };
+const sai_attr_metadata_t sai_metadata_attr_SAI_NEXT_HOP_GROUP_MEMBER_ATTR_SEQUENCE_ID = {
+    .objecttype                    = SAI_OBJECT_TYPE_NEXT_HOP_GROUP_MEMBER,
+    .attrid                        = SAI_NEXT_HOP_GROUP_MEMBER_ATTR_SEQUENCE_ID,
+    .attridname                    = "SAI_NEXT_HOP_GROUP_MEMBER_ATTR_SEQUENCE_ID",
+    .brief                         = "Object's sequence ID for enforcing the members' order.",
+    .attrvaluetype                 = SAI_ATTR_VALUE_TYPE_UINT32,
+    .flags                         = (sai_attr_flags_t)(SAI_ATTR_FLAGS_CREATE_ONLY),
+    .allowedobjecttypes            = NULL,
+    .allowedobjecttypeslength      = 0,
+    .allowrepetitiononlist         = false,
+    .allowmixedobjecttypes         = false,
+    .allowemptylist                = false,
+    .allownullobjectid             = false,
+    .isoidattribute                = (0 > 0),
+    .defaultvaluetype              = SAI_DEFAULT_VALUE_TYPE_CONST,
+    .defaultvalue                  = &sai_metadata_SAI_NEXT_HOP_GROUP_MEMBER_ATTR_SEQUENCE_ID_default_value,
+    .defaultvalueobjecttype        = SAI_OBJECT_TYPE_NULL,
+    .defaultvalueattrid            = SAI_INVALID_ATTRIBUTE_ID,
+    .storedefaultvalue             = false,
+    .isenum                        = false,
+    .isenumlist                    = false,
+    .enummetadata                  = NULL,
+    .conditiontype                 = SAI_ATTR_CONDITION_TYPE_NONE,
+    .conditions                    = NULL,
+    .conditionslength              = 0,
+    .isconditional                 = (0 != 0),
+    .validonlytype                 = SAI_ATTR_CONDITION_TYPE_NONE,
+    .validonly                     = NULL,
+    .validonlylength               = 0,
+    .isvalidonly                   = (0 != 0),
+    .getsave                       = false,
+    .isvlan                        = false,
+    .isaclfield                    = false,
+    .isaclaction                   = false,
+    .ismandatoryoncreate           = false,
+    .iscreateonly                  = true,
+    .iscreateandset                = false,
     .isreadonly                    = false,
     .iskey                         = false,
     .isprimitive                   = true,
@@ -61820,6 +62033,8 @@ const sai_attr_metadata_t* const sai_metadata_object_type_sai_next_hop_group_att
     &sai_metadata_attr_SAI_NEXT_HOP_GROUP_ATTR_TYPE,
     &sai_metadata_attr_SAI_NEXT_HOP_GROUP_ATTR_SET_SWITCHOVER,
     &sai_metadata_attr_SAI_NEXT_HOP_GROUP_ATTR_COUNTER_ID,
+    &sai_metadata_attr_SAI_NEXT_HOP_GROUP_ATTR_CONFIGURED_SIZE,
+    &sai_metadata_attr_SAI_NEXT_HOP_GROUP_ATTR_REAL_SIZE,
     NULL
 };
 const sai_attr_metadata_t* const sai_metadata_object_type_sai_router_interface_attr_t[] = {
@@ -62561,6 +62776,8 @@ const sai_attr_metadata_t* const sai_metadata_object_type_sai_next_hop_group_mem
     &sai_metadata_attr_SAI_NEXT_HOP_GROUP_MEMBER_ATTR_CONFIGURED_ROLE,
     &sai_metadata_attr_SAI_NEXT_HOP_GROUP_MEMBER_ATTR_OBSERVED_ROLE,
     &sai_metadata_attr_SAI_NEXT_HOP_GROUP_MEMBER_ATTR_MONITORED_OBJECT,
+    &sai_metadata_attr_SAI_NEXT_HOP_GROUP_MEMBER_ATTR_INDEX,
+    &sai_metadata_attr_SAI_NEXT_HOP_GROUP_MEMBER_ATTR_SEQUENCE_ID,
     NULL
 };
 const sai_attr_metadata_t* const sai_metadata_object_type_sai_stp_port_attr_t[] = {
@@ -65611,7 +65828,7 @@ const sai_object_type_info_t sai_metadata_object_type_info_SAI_OBJECT_TYPE_NEXT_
     .attridend            = SAI_NEXT_HOP_GROUP_ATTR_END,
     .enummetadata         = &sai_metadata_enum_sai_next_hop_group_attr_t,
     .attrmetadata         = sai_metadata_object_type_sai_next_hop_group_attr_t,
-    .attrmetadatalength   = 5,
+    .attrmetadatalength   = 7,
     .isnonobjectid        = false,
     .isobjectid           = !false,
     .structmembers        = NULL,
@@ -68713,7 +68930,7 @@ const sai_object_type_info_t sai_metadata_object_type_info_SAI_OBJECT_TYPE_NEXT_
     .attridend            = SAI_NEXT_HOP_GROUP_MEMBER_ATTR_END,
     .enummetadata         = &sai_metadata_enum_sai_next_hop_group_member_attr_t,
     .attrmetadata         = sai_metadata_object_type_sai_next_hop_group_member_attr_t,
-    .attrmetadatalength   = 6,
+    .attrmetadatalength   = 8,
     .isnonobjectid        = false,
     .isobjectid           = !false,
     .structmembers        = NULL,
@@ -72081,16 +72298,20 @@ const sai_attr_metadata_t* const sai_metadata_attr_sorted_by_id_name[] = {
     &sai_metadata_attr_SAI_NEXT_HOP_ATTR_TUNNEL_MAC,
     &sai_metadata_attr_SAI_NEXT_HOP_ATTR_TUNNEL_VNI,
     &sai_metadata_attr_SAI_NEXT_HOP_ATTR_TYPE,
+    &sai_metadata_attr_SAI_NEXT_HOP_GROUP_ATTR_CONFIGURED_SIZE,
     &sai_metadata_attr_SAI_NEXT_HOP_GROUP_ATTR_COUNTER_ID,
     &sai_metadata_attr_SAI_NEXT_HOP_GROUP_ATTR_NEXT_HOP_COUNT,
     &sai_metadata_attr_SAI_NEXT_HOP_GROUP_ATTR_NEXT_HOP_MEMBER_LIST,
+    &sai_metadata_attr_SAI_NEXT_HOP_GROUP_ATTR_REAL_SIZE,
     &sai_metadata_attr_SAI_NEXT_HOP_GROUP_ATTR_SET_SWITCHOVER,
     &sai_metadata_attr_SAI_NEXT_HOP_GROUP_ATTR_TYPE,
     &sai_metadata_attr_SAI_NEXT_HOP_GROUP_MEMBER_ATTR_CONFIGURED_ROLE,
+    &sai_metadata_attr_SAI_NEXT_HOP_GROUP_MEMBER_ATTR_INDEX,
     &sai_metadata_attr_SAI_NEXT_HOP_GROUP_MEMBER_ATTR_MONITORED_OBJECT,
     &sai_metadata_attr_SAI_NEXT_HOP_GROUP_MEMBER_ATTR_NEXT_HOP_GROUP_ID,
     &sai_metadata_attr_SAI_NEXT_HOP_GROUP_MEMBER_ATTR_NEXT_HOP_ID,
     &sai_metadata_attr_SAI_NEXT_HOP_GROUP_MEMBER_ATTR_OBSERVED_ROLE,
+    &sai_metadata_attr_SAI_NEXT_HOP_GROUP_MEMBER_ATTR_SEQUENCE_ID,
     &sai_metadata_attr_SAI_NEXT_HOP_GROUP_MEMBER_ATTR_WEIGHT,
     &sai_metadata_attr_SAI_POLICER_ATTR_CBS,
     &sai_metadata_attr_SAI_POLICER_ATTR_CIR,
@@ -72644,7 +72865,7 @@ const sai_attr_metadata_t* const sai_metadata_attr_sorted_by_id_name[] = {
     &sai_metadata_attr_SAI_WRED_ATTR_YELLOW_MIN_THRESHOLD,
     NULL
 };
-const size_t sai_metadata_attr_sorted_by_id_name_count = 1031;
+const size_t sai_metadata_attr_sorted_by_id_name_count = 1035;
 
 /* SAI notifications struct */
 
