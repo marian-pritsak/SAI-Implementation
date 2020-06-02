@@ -324,6 +324,7 @@ static sai_status_t mlnx_create_next_hop_group(_Out_ sai_object_id_t     * next_
             next_hop->next_hop_key.next_hop_key_entry.ip_next_hop.address.version          = SX_IP_VERSION_IPV4;
             next_hop->next_hop_key.next_hop_key_entry.ip_next_hop.rif                      = 0;
             next_hop->next_hop_data.action                                                 = SX_ROUTER_ACTION_DROP;
+            next_hop->next_hop_data.counter_id                                             = 0;
             next_hop->next_hop_data.trap_attr.prio                                         = SX_TRAP_PRIORITY_MED;
             next_hop->next_hop_data.weight                                                 = 1;
         }
