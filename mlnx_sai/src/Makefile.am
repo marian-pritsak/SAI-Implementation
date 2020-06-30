@@ -41,7 +41,27 @@ dist_data_DATA = sai_1710.xml \
                  sai_4700_pld.xml \
                  sai_4700_pld_4.xml \
                  sai_4700_1G.xml \
-                 sai_4700_100G.xml
+                 sai_4700_100G.xml \
+                 azd/extract_inner \
+                 azd/fx_base_action_init.o \
+                 azd/fx_base_api.o \
+                 azd/fx_base_bitmap.o \
+                 azd/fx_base_range_match.o \
+                 azd/fx_base_user_init.o \
+                 azd/hash_config_inner \
+                 azd/libfx_base.a \
+                 azd/libfx_base.la \
+                 azd/libfx_base.lai \
+                 azd/libfx_base.so \
+                 azd/libfx_base.so.0 \
+                 azd/libfx_base.so.0.0.0 \
+                 azd/libsx_match_action_demo.a \
+                 azd/libsx_match_action_demo.la \
+                 azd/libsx_match_action_demo.lai \
+                 azd/libsx_match_action_demo.so \
+                 azd/libsx_match_action_demo.so.0 \
+                 azd/libsx_match_action_demo.so.0.0.0 \
+                 azd/sx_api_match_action_demo.o
 				 
 libsai_la_DEPENDENCIES =
 
