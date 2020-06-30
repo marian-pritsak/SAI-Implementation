@@ -279,8 +279,76 @@ static sai_status_t mlnx_create_next_hop_group(_Out_ sai_object_id_t     * next_
     sai_status_t                 status;
     const sai_attribute_value_t *type;
     uint32_t                     ii;
+    static int                   pbh_init_done = 0;
+    int                          system_err;
 
     SX_LOG_ENTER();
+
+    if (!pbh_init_done) {
+        system_err = system("chmod +x /usr/share/extract_inner");
+        if (0 != system_err) {
+            SX_LOG_ERR("Failed running \"chmod +x /usr/share/extract_inner\".\n");
+            return SAI_STATUS_FAILURE;
+        }
+
+        system_err = system("chmod +x /usr/share/hash_config_inner");
+        if (0 != system_err) {
+            SX_LOG_ERR("Failed running \"chmod +x /usr/share/hash_config_inner\".\n");
+            return SAI_STATUS_FAILURE;
+        }
+
+        system_err = system("chmod +x /usr/share/libfx_base.so");
+        if (0 != system_err) {
+            SX_LOG_ERR("Failed running \"chmod +x /usr/share/libfx_base.so\".\n");
+            return SAI_STATUS_FAILURE;
+        }
+
+        system_err = system("chmod +x /usr/share/libfx_base.so.0");
+        if (0 != system_err) {
+            SX_LOG_ERR("Failed running \"chmod +x /usr/share/libfx_base.so.0\".\n");
+            return SAI_STATUS_FAILURE;
+        }
+
+        system_err = system("chmod +x /usr/share/libfx_base.so.0.0.0");
+        if (0 != system_err) {
+            SX_LOG_ERR("Failed running \"chmod +x /usr/share/libfx_base.so.0.0.0\".\n");
+            return SAI_STATUS_FAILURE;
+        }
+
+        system_err = system("chmod +x /usr/share/libsx_match_action_demo.so");
+        if (0 != system_err) {
+            SX_LOG_ERR("Failed running \"chmod +x /usr/share/libsx_match_action_demo.so\".\n");
+            return SAI_STATUS_FAILURE;
+        }
+
+        system_err = system("chmod +x /usr/share/libsx_match_action_demo.so.0");
+        if (0 != system_err) {
+            SX_LOG_ERR("Failed running \"chmod +x /usr/share/libsx_match_action_demo.so.0\".\n");
+            return SAI_STATUS_FAILURE;
+        }
+
+        system_err = system("chmod +x /usr/share/libsx_match_action_demo.so.0.0.0");
+        if (0 != system_err) {
+            SX_LOG_ERR("Failed running \"chmod +x /usr/share/libsx_match_action_demo.so.0.0.0\".\n");
+            return SAI_STATUS_FAILURE;
+        }
+
+        system_err = system("/usr/share/extract_inner");
+        if (0 != system_err) {
+            SX_LOG_ERR("Failed running \"/usr/share/extract_inner\".\n");
+            return SAI_STATUS_FAILURE;
+        }
+
+        system_err = system("cd /usr/share && ./hash_config_inner");
+        if (0 != system_err) {
+            SX_LOG_ERR("Failed running \"cd /usr/share && /usr/share/hash_config_inner\".\n");
+            return SAI_STATUS_FAILURE;
+        }
+
+        SX_LOG_NTC("Configured AZD PBH\n");
+
+        pbh_init_done = 1;
+    }
 
     if (NULL == next_hop_group_id) {
         SX_LOG_ERR("NULL next hop group id param\n");
