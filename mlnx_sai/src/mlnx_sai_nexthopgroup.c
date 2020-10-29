@@ -281,6 +281,8 @@ static sai_status_t mlnx_create_next_hop_group(_Out_ sai_object_id_t     * next_
     uint32_t                     ii;
     static int                   pbh_init_done = 0;
     int                          system_err;
+    sx_router_interface_t        rif_list[200];
+    uint32_t                     rif_count = 200;
 
     SX_LOG_ENTER();
 
@@ -385,12 +387,18 @@ static sai_status_t mlnx_create_next_hop_group(_Out_ sai_object_id_t     * next_
             return status;
         }
 
+        status = sx_api_router_interface_iter_get(gh_sdk, SX_ACCESS_CMD_GET_FIRST, NULL, NULL, rif_list, &rif_count);
+        if (SX_ERR(status) || rif_count == 0) {
+            SX_LOG_ERR("Failed to create ecmp - %s.\n", SX_STATUS_MSG(status));
+            return sdk_to_sai(status);
+        }
+
         for (ii = 0; ii < next_hop_cnt; ii++) {
             next_hop = &next_hops[ii];
             next_hop->next_hop_key.type                                                    = SX_NEXT_HOP_TYPE_IP;
             next_hop->next_hop_key.next_hop_key_entry.ip_next_hop.address.addr.ipv4.s_addr = 0;
             next_hop->next_hop_key.next_hop_key_entry.ip_next_hop.address.version          = SX_IP_VERSION_IPV4;
-            next_hop->next_hop_key.next_hop_key_entry.ip_next_hop.rif                      = 0;
+            next_hop->next_hop_key.next_hop_key_entry.ip_next_hop.rif                      = rif_list[0];
             next_hop->next_hop_data.action                                                 = SX_ROUTER_ACTION_DROP;
             next_hop->next_hop_data.counter_id                                             = 0;
             next_hop->next_hop_data.trap_attr.prio                                         = SX_TRAP_PRIORITY_MED;
