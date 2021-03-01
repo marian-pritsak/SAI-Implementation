@@ -311,7 +311,9 @@ typedef enum {
     MLNX_SHM_RM_ARRAY_TYPE_DEBUG_COUNTER,
     MLNX_SHM_RM_ARRAY_TYPE_BFD_SESSION,
     MLNX_SHM_RM_ARRAY_TYPE_NEXTHOP,
-    MLNX_SHM_RM_ARRAY_TYPE_MAX = MLNX_SHM_RM_ARRAY_TYPE_NEXTHOP,
+    MLNX_SHM_RM_ARRAY_TYPE_NEXTHOP_GROUP,
+    MLNX_SHM_RM_ARRAY_TYPE_NEXTHOP_GROUP_MEMBER,
+    MLNX_SHM_RM_ARRAY_TYPE_MAX = MLNX_SHM_RM_ARRAY_TYPE_NEXTHOP_GROUP_MEMBER,
     MLNX_SHM_RM_ARRAY_TYPE_SIZE
 } mlnx_shm_rm_array_type_t;
 typedef sai_status_t (*mlnx_shm_rm_size_get_fn)(_Out_ size_t *size);
@@ -394,9 +396,8 @@ PACKED(struct _mlnx_object_id_t {
                           uint16_t id;
                       }, stp);
                PACKED(struct {
-                          uint8_t group_id;
-                          uint8_t nhop_id;
-                      }, nhop_group_member_high);
+                          uint16_t member_idx;
+                      }, nhop_group_member);
                PACKED(struct {
                           uint16_t id;
                       }, vlan);
@@ -435,10 +436,7 @@ PACKED(struct _mlnx_object_id_t {
                mlnx_shm_rm_array_idx_t debug_counter_db_idx;
                mlnx_shm_rm_array_idx_t bfd_db_idx;
                mlnx_shm_rm_array_idx_t encap_nexthop_db_idx;
-               PACKED(struct {
-                          uint16_t group_id;
-                          uint16_t nhop_id;
-                      }, nhop_group_member_low);
+               mlnx_shm_rm_array_idx_t nexthop_group_db_idx;
                PACKED(struct {
                           uint32_t db_idx;
                       }, l2mc_group);
@@ -1381,6 +1379,45 @@ sai_status_t mlnx_encap_nexthop_counter_update(_In_ sai_object_id_t nh,
 sai_status_t mlnx_encap_nexthop_change_dmac(_In_ sai_object_id_t nh,
                                             _In_ const sai_mac_t mac,
                                             _In_ bool store);
+
+#define MAX_NEXTHOP_GROUP_MEMBER_BLOCK_NUMBER 256
+#define NEXTHOP_GROUP_MEMBER_BLOCK_SIZE 64
+
+typedef struct _mlnx_nexthop_group_member_data_t {
+    bool is_db_entry;
+    union {
+        mlnx_shm_rm_array_idx_t nexthop_db_idx;
+        sx_ecmp_id_t sx_nexthop_id;
+    } entry;
+} mlnx_nexthop_group_member_data_t;
+
+typedef struct _mlnx_nhg_block_db_entry_data_t {
+    mlnx_nexthop_group_member_data_t members[NEXTHOP_GROUP_MEMBER_BLOCK_SIZE];
+    uint32_t                         count;
+    mlnx_shm_rm_array_idx_t          next_block; /* Used to extend NHG beyond 64 members */
+} mlnx_nhg_block_db_entry_data_t;
+
+typedef struct _mlnx_nhg_block_db_entry_t {
+    mlnx_shm_array_hdr_t           array_hdr;
+    mlnx_nhg_block_db_entry_data_t data;
+} mlnx_nhg_block_db_entry_t;
+
+#define MAX_NEXTHOP_GROUP_NUMBER 256
+
+typedef struct _mlnx_nexthop_group_vrf_data_t {
+    sai_object_id_t associated_vrf;
+    sx_ecmp_id_t    sx_ecmp_id;
+} mlnx_nexthop_group_vrf_data_t;
+
+typedef struct _mlnx_nexthop_group_db_entry_data_t {
+    mlnx_shm_rm_array_idx_t       members_idx;
+    mlnx_nexthop_group_vrf_data_t vrf_data[NUMBER_OF_LOCAL_VNETS];
+} mlnx_nexthop_group_db_entry_data_t;
+
+typedef struct _mlnx_nexthop_group_db_entry_t {
+    mlnx_shm_array_hdr_t               array_hdr;
+    mlnx_nexthop_group_db_entry_data_t data;
+} mlnx_nexthop_group_db_entry_t;
 
 #define mlnx_vlan_id_foreach(vid) \
     for (vid = SXD_VID_MIN; vid <= SXD_VID_MAX; vid++)

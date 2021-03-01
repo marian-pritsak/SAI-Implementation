@@ -3213,6 +3213,12 @@ static mlnx_shm_rm_array_init_info_t mlnx_shm_array_info[MLNX_SHM_RM_ARRAY_TYPE_
     [MLNX_SHM_RM_ARRAY_TYPE_NEXTHOP] = {sizeof(mlnx_encap_nexthop_db_entry_t),
                                         NULL,
                                         MAX_ENCAP_NEXTHOPS_NUMBER},
+    [MLNX_SHM_RM_ARRAY_TYPE_NEXTHOP_GROUP] = {sizeof(mlnx_nexthop_group_db_entry_t),
+                                              NULL,
+                                              MAX_NEXTHOP_GROUP_NUMBER},
+    [MLNX_SHM_RM_ARRAY_TYPE_NEXTHOP_GROUP_MEMBER] = {sizeof(mlnx_nhg_block_db_entry_t),
+                                              NULL,
+                                              MAX_NEXTHOP_GROUP_MEMBER_BLOCK_NUMBER},
 };
 static size_t mlnx_sai_rm_db_size_get(void)
 {
