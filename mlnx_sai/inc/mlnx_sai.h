@@ -1407,6 +1407,7 @@ typedef struct _mlnx_nhg_block_db_entry_t {
 typedef struct _mlnx_nexthop_group_vrf_data_t {
     sai_object_id_t associated_vrf;
     sx_ecmp_id_t    sx_ecmp_id;
+    uint32_t        refcount;
 } mlnx_nexthop_group_vrf_data_t;
 
 typedef struct _mlnx_nexthop_group_db_entry_data_t {
@@ -1418,6 +1419,12 @@ typedef struct _mlnx_nexthop_group_db_entry_t {
     mlnx_shm_array_hdr_t               array_hdr;
     mlnx_nexthop_group_db_entry_data_t data;
 } mlnx_nexthop_group_db_entry_t;
+
+sai_status_t mlnx_nexthop_group_ecmp_get(_In_ sai_object_id_t group_id,
+                                         _In_ sai_object_id_t vrf_id,
+                                         _Out_ sx_ecmp_id_t  *sx_ecmp_id);
+sai_status_t mlnx_nexthop_group_ecmp_release(_In_ sx_ecmp_id_t    sx_ecmp_id,
+                                             _In_ sai_object_id_t vrf_id);
 
 #define mlnx_vlan_id_foreach(vid) \
     for (vid = SXD_VID_MIN; vid <= SXD_VID_MAX; vid++)

@@ -107,6 +107,8 @@ static sai_status_t mlnx_translate_sai_route_entry_to_sdk(_In_ const sai_route_e
     uint32_t     data;
     sai_status_t status;
 
+    SX_LOG_ENTER();
+
     if (SAI_STATUS_SUCCESS !=
         (status = mlnx_translate_sai_ip_prefix_to_sdk(&route_entry->destination, ip_prefix))) {
         return status;
@@ -118,6 +120,7 @@ static sai_status_t mlnx_translate_sai_route_entry_to_sdk(_In_ const sai_route_e
     }
     *vrid = (sx_router_id_t)data;
 
+    SX_LOG_EXIT();
     return SAI_STATUS_SUCCESS;
 }
 
@@ -157,6 +160,27 @@ static sai_status_t mlnx_route_handle_encap_nexthop(_In_ sai_object_id_t nh,
     status = mlnx_encap_nexthop_get_ecmp(nh, vrf, sx_ecmp_id);
     if (SAI_ERR(status)) {
         SX_LOG_ERR("Get ecmp failed.\n");
+        goto out;
+    }
+
+out:
+    sai_db_unlock();
+    return status;
+}
+
+static sai_status_t mlnx_route_handle_nexthop_group(_In_ sai_object_id_t group_id,
+                                                    _In_ sai_object_id_t vrf_id,
+                                                    _Out_ sx_ecmp_id_t  *sx_ecmp_id)
+{
+    sai_status_t                   status;
+
+    assert(sx_ecmp_id);
+
+    sai_db_write_lock();
+
+    status = mlnx_nexthop_group_ecmp_get(group_id, vrf_id, sx_ecmp_id);
+    if (SAI_ERR(status)) {
+        SX_LOG_ERR("Get ecmp of a group failed.\n");
         goto out;
     }
 
@@ -213,7 +237,7 @@ static sai_status_t mlnx_fill_route_data(sx_uc_route_data_t      *route_data,
         }
     } else if (SAI_OBJECT_TYPE_NEXT_HOP_GROUP == sai_object_type_query(oid)) {
         if (SAI_STATUS_SUCCESS !=
-            (status = mlnx_object_to_type(oid, SAI_OBJECT_TYPE_NEXT_HOP_GROUP, &sdk_ecmp_id, NULL))) {
+            (status = mlnx_route_handle_nexthop_group(oid, route_entry->vr_id, &sdk_ecmp_id))) {
             return status;
         }
 
@@ -436,6 +460,8 @@ static sai_status_t mlnx_route_get_vrf_and_nh(_In_ const sai_route_entry_t *rout
     uint32_t                data;
     uint16_t                use_db;
 
+    SX_LOG_ENTER();
+
     status = mlnx_get_route(route_entry, &route_get_entry, &vrid);
     if (SAI_ERR(status)) {
         return status;
@@ -468,6 +494,8 @@ static sai_status_t mlnx_route_get_vrf_and_nh(_In_ const sai_route_entry_t *rout
     *found = use_db;
     *vrf   = route_entry->vr_id;
 
+    SX_LOG_EXIT();
+
     return SAI_STATUS_SUCCESS;
 }
 
@@ -494,6 +522,7 @@ static sai_status_t mlnx_remove_route(_In_ const sai_route_entry_t* route_entry)
     sai_object_id_t vrf;
     sai_object_id_t nh;
     bool            encap_nh_found = false;
+    sx_uc_route_get_entry_t route_get_entry;
 
     SX_LOG_ENTER();
 
@@ -512,6 +541,11 @@ static sai_status_t mlnx_remove_route(_In_ const sai_route_entry_t* route_entry)
         return status;
     }
 
+    status = mlnx_get_route(route_entry, &route_get_entry, &vrid);
+    if (SAI_ERR(status)) {
+        return status;
+    }
+
     status = mlnx_route_get_vrf_and_nh(route_entry, &vrf, &nh, &encap_nh_found);
     if (SAI_ERR(status)) {
         SX_LOG_ERR("Failed to find Encap NH.\n");
@@ -522,6 +556,15 @@ static sai_status_t mlnx_remove_route(_In_ const sai_route_entry_t* route_entry)
     if (SX_ERR(sx_status)) {
         SX_LOG_ERR("Failed to remove route - %s.\n", SX_STATUS_MSG(sx_status));
         return sdk_to_sai(sx_status);
+    }
+
+    if (SAI_OBJECT_TYPE_NEXT_HOP_GROUP == sai_object_type_query(nh)) {
+        status = mlnx_nexthop_group_ecmp_release(route_get_entry.route_data.uc_route_param.ecmp_id, route_entry->vr_id);
+        if (SAI_ERR(status)) {
+            SX_LOG_ERR("Failed to find release NH group.\n");
+            return status;
+        }
+
     }
 
     if (encap_nh_found) {
@@ -673,7 +716,7 @@ static sai_status_t mlnx_ecmp_get_ip(_In_ sx_ecmp_id_t sdk_ecmp_id, _Out_ sx_ip_
 
     assert(ip);
 
-    sdk_next_hop_cnt = 1;
+    sdk_next_hop_cnt = 0;
     sx_status        = sx_api_router_ecmp_get(gh_sdk, sdk_ecmp_id, &sdk_next_hop, &sdk_next_hop_cnt);
     if (SX_ERR(sx_status)) {
         SX_LOG_ERR("Failed to get ecmp - %s.\n", SX_STATUS_MSG(sx_status));
@@ -681,8 +724,14 @@ static sai_status_t mlnx_ecmp_get_ip(_In_ sx_ecmp_id_t sdk_ecmp_id, _Out_ sx_ip_
     }
 
     if (1 != sdk_next_hop_cnt) {
-        SX_LOG_DBG("Next hops count != 1, (value: %u)\n", sdk_next_hop_cnt);
+        SX_LOG_NTC("Next hops count != 1, (value: %u)\n", sdk_next_hop_cnt);
         return SAI_STATUS_SUCCESS;
+    }
+
+    sx_status        = sx_api_router_ecmp_get(gh_sdk, sdk_ecmp_id, &sdk_next_hop, &sdk_next_hop_cnt);
+    if (SX_ERR(sx_status)) {
+        SX_LOG_ERR("Failed to get ecmp - %s.\n", SX_STATUS_MSG(sx_status));
+        return sdk_to_sai(sx_status);
     }
 
     *ip = sdk_next_hop.next_hop_key.next_hop_key_entry.ip_next_hop.address;
@@ -718,9 +767,11 @@ static sai_status_t mlnx_route_get_encap_nexthop(_In_ sx_ip_addr_t *ip, _Out_ sa
 static sai_status_t mlnx_route_next_hop_id_get_ext(_In_ sx_ecmp_id_t ecmp, _Out_ sai_object_id_t *nh)
 {
     sai_status_t status;
-    sx_ip_addr_t ip = {0};
+    sx_ip_addr_t ip = {}; 
 
     assert(nh);
+
+    SX_LOG_ENTER();
 
     status = mlnx_ecmp_get_ip(ecmp, &ip);
     if (SAI_ERR(status)) {
@@ -729,12 +780,14 @@ static sai_status_t mlnx_route_next_hop_id_get_ext(_In_ sx_ecmp_id_t ecmp, _Out_
     }
 
     if (mlnx_is_encap_nexthop_fake_ip(&ip)) {
+        SX_LOG_ERR("Getting encap nexthop.\n");
         status = mlnx_route_get_encap_nexthop(&ip, nh);
         if (SAI_ERR(status)) {
             SX_LOG_ERR("Get Encap Next Hop OID failed.\n");
             return status;
         }
     } else {
+        SX_LOG_ERR("CREATING NHOP GROUP.\n");
         status = mlnx_create_object(SAI_OBJECT_TYPE_NEXT_HOP_GROUP,
                                     ecmp,
                                     NULL,
@@ -744,6 +797,8 @@ static sai_status_t mlnx_route_next_hop_id_get_ext(_In_ sx_ecmp_id_t ecmp, _Out_
             return status;
         }
     }
+
+    SX_LOG_EXIT();
 
     return SAI_STATUS_SUCCESS;
 }
